@@ -15,22 +15,45 @@
         RH - Tableau de bord
     </title>
 
-    <!-- Bootstrap 5 (structure / nav) -->
+
+    <!-- =========================
+         BOOTSTRAP 5
+         ========================= -->
+
     <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
             rel="stylesheet">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- =========================
+         GOOGLE FONTS
+         ========================= -->
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link
+            href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet">
+
+
+    <!-- =========================
+         CSS PRINCIPAL
+         ========================= -->
 
     <link
             rel="stylesheet"
             href="/style.css">
 
+
     <style>
 
         :root {
+
             --ink: #16283D;
             --ink-soft: #24384F;
             --sand: #F6F4EF;
@@ -38,110 +61,537 @@
             --text: #1F2937;
             --muted: #6B7280;
             --line: #E4E0D6;
+
+            --green-bg: #E8F5E9;
+            --green-text: #1B5E20;
+            --green-hover: #DCEDC8;
+
+            --red-bg: #FFEBEE;
+            --red-text: #B71C1C;
+            --red-hover: #FFCDD2;
         }
 
+
+        /* =========================
+           BODY
+           ========================= */
+
         body {
+
             background: var(--sand) !important;
+
             font-family: 'Inter', sans-serif;
+
             color: var(--text);
         }
 
+
+        /* =========================
+           EN-TÊTE PAGE
+           ========================= */
+
         .page-head {
+
             display: flex;
+
             align-items: baseline;
+
             justify-content: space-between;
+
             flex-wrap: wrap;
+
             gap: 0.75rem;
+
             margin-bottom: 1.75rem;
         }
 
+
         .page-head h1 {
+
             font-family: 'Fraunces', serif;
+
             font-weight: 500;
+
             font-size: 1.9rem;
+
             color: var(--ink);
+
             margin: 0;
         }
 
+
         .date-chip {
+
             font-size: 0.9rem;
+
             color: var(--muted);
+
             border-left: 2px solid var(--gold);
+
             padding-left: 0.6rem;
         }
 
+
+        /* =========================
+           PANELS
+           ========================= */
+
         .panel {
+
             background: #fff;
+
             border: 1px solid var(--line);
+
             border-radius: 10px;
+
             overflow: hidden;
         }
 
-        .panel-head {
+
+        /* =========================
+           RECHERCHE
+           ========================= */
+
+        .search-panel {
+
             padding: 1.1rem 1.5rem;
+
+            display: flex;
+
+            gap: 1rem;
+
+            align-items: flex-end;
+
+            flex-wrap: wrap;
+        }
+
+
+        .search-panel label {
+
+            display: block;
+
+            font-size: 0.8rem;
+
+            color: var(--muted);
+
+            margin-bottom: 0.35rem;
+        }
+
+
+        .search-panel .field {
+
+            min-width: 160px;
+        }
+
+
+        /* =========================
+           EN-TÊTE DU TABLEAU
+           ========================= */
+
+        .panel-head {
+
+            padding: 1.1rem 1.5rem;
+
             border-bottom: 1px solid var(--line);
         }
 
-        .panel-head h2 {
-            font-size: 1.05rem;
-            font-weight: 600;
-            color: var(--ink);
-            margin: 0;
+
+        /*
+         * CONTENEUR PRINCIPAL :
+         * titre à gauche
+         * bouton à droite
+         */
+
+        .table-header {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            width: 100%;
+
+            gap: 1rem;
+
+            min-height: 42px;
         }
 
-        .panel-head p {
-            font-size: 0.85rem;
-            color: var(--muted);
-            margin: 0.2rem 0 0;
+
+        /*
+         * PARTIE GAUCHE
+         */
+
+        .table-title {
+
+            flex: 1;
+
+            min-width: 0;
         }
+
+
+        .table-title h2 {
+
+            font-size: 1.05rem;
+
+            font-weight: 600;
+
+            color: var(--ink);
+
+            margin: 0;
+
+            line-height: 1.4;
+        }
+
+
+        /*
+         * PARTIE DROITE
+         */
+
+        .table-actions {
+
+            margin-left: auto;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: flex-end;
+
+            flex-shrink: 0;
+        }
+
+
+        /*
+         * BOUTON PDF
+         */
+
+        .btn-pdf {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 0.35rem;
+
+            text-decoration: none;
+
+            border-radius: 6px;
+
+            font-weight: 600;
+
+            white-space: nowrap;
+
+            padding: 0.55rem 1rem;
+
+            font-size: 0.9rem;
+
+            line-height: 1.2;
+
+            background-color: #dc3545;
+
+            color: #fff;
+
+            border: 1px solid #dc3545;
+
+            transition: all 0.2s ease;
+        }
+
+
+        .btn-pdf:hover {
+
+            background-color: #bb2d3b;
+
+            border-color: #b02a37;
+
+            color: #fff;
+
+            text-decoration: none;
+        }
+
+
+        /*
+         * BOUTON PDF DÉSACTIVÉ
+         */
+
+        .btn-pdf-disabled {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 0.35rem;
+
+            border-radius: 6px;
+
+            font-weight: 600;
+
+            white-space: nowrap;
+
+            padding: 0.55rem 1rem;
+
+            font-size: 0.9rem;
+
+            line-height: 1.2;
+
+            background-color: #adb5bd;
+
+            color: #fff;
+
+            border: 1px solid #adb5bd;
+
+            cursor: not-allowed;
+
+            opacity: 0.65;
+        }
+
+
+        /*
+         * DESCRIPTION
+         */
+
+        .panel-head > p {
+
+            font-size: 0.85rem;
+
+            color: var(--muted);
+
+            margin: 0.5rem 0 0;
+        }
+
+
+        /* =========================
+           TABLEAU
+           ========================= */
 
         table.roster {
+
             width: 100%;
+
             border-collapse: collapse;
+
             font-size: 0.92rem;
         }
 
+
         table.roster thead th {
+
             text-align: left;
+
             font-weight: 500;
+
             font-size: 0.8rem;
+
             color: var(--muted);
+
             padding: 0.7rem 1.5rem;
+
             border-bottom: 1px solid var(--line);
+
+            background: #fff;
         }
 
+
         table.roster tbody td {
+
             padding: 0.85rem 1.5rem;
+
             border-bottom: 1px solid var(--line);
+
             vertical-align: middle;
         }
 
+
         table.roster tbody tr:last-child td {
+
             border-bottom: none;
         }
 
-        table.roster tbody tr:hover td {
-            background: var(--sand);
-        }
+
+        /* =========================
+           MATRICULE / SITE
+           ========================= */
 
         table.roster td.matricule {
+
             font-weight: 600;
+
             color: var(--ink);
         }
 
+
         table.roster td.site {
+
             color: var(--muted);
         }
+
+
+        /* =========================
+           POINTAGE ENTRÉE
+           ========================= */
+
+        table.roster tbody tr.pointage-entree td {
+
+            background-color: var(--green-bg);
+
+            color: var(--green-text);
+        }
+
+
+        table.roster tbody tr.pointage-entree:hover td {
+
+            background-color: var(--green-hover);
+        }
+
+
+        /* =========================
+           POINTAGE SORTIE
+           ========================= */
+
+        table.roster tbody tr.pointage-sortie td {
+
+            background-color: var(--red-bg);
+
+            color: var(--red-text);
+        }
+
+
+        table.roster tbody tr.pointage-sortie:hover td {
+
+            background-color: var(--red-hover);
+        }
+
+
+        /* =========================
+           TYPE
+           ========================= */
+
+        .type-entree {
+
+            font-weight: 600;
+
+            color: #2E7D32;
+        }
+
+
+        .type-sortie {
+
+            font-weight: 600;
+
+            color: #C62828;
+        }
+
+
+        /* =========================
+           ÉTAT VIDE
+           ========================= */
 
         .empty-state {
+
             text-align: center;
-            padding: 3.5rem 1.5rem;
+
+            padding: 3.5rem 1.5rem !important;
+
             color: var(--muted);
         }
 
+
         .empty-state span {
+
             display: block;
+
             font-size: 0.92rem;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+           ========================= */
+
+        @media (max-width: 768px) {
+
+            .page-head h1 {
+
+                font-size: 1.6rem;
+            }
+
+
+            /*
+             * Sur téléphone :
+             * titre et bouton restent propres
+             */
+
+            .table-header {
+
+                align-items: center;
+
+                gap: 0.75rem;
+            }
+
+
+            .table-title h2 {
+
+                font-size: 0.95rem;
+            }
+
+
+            .btn-pdf,
+            .btn-pdf-disabled {
+
+                padding: 0.5rem 0.7rem;
+
+                font-size: 0.8rem;
+            }
+
+
+            table.roster {
+
+                font-size: 0.85rem;
+            }
+
+
+            table.roster thead th,
+            table.roster tbody td {
+
+                padding: 0.7rem 1rem;
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            /*
+             * Petit écran :
+             * le bouton passe sous le titre
+             */
+
+            .table-header {
+
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+
+            .table-actions {
+
+                width: 100%;
+
+                margin-left: 0;
+            }
+
+
+            .btn-pdf,
+            .btn-pdf-disabled {
+
+                width: 100%;
+            }
+
         }
 
     </style>
@@ -152,6 +602,10 @@
 <body class="bg-light">
 
 
+<!-- =========================
+     NAVIGATION
+     ========================= -->
+
 <nav
         th:replace="~{fragments :: nav}">
 </nav>
@@ -159,45 +613,258 @@
 
 <div class="container py-4">
 
-    <div class="page-head">
 
-        <h1>
-            Tableau de bord
-        </h1>
+    <!-- =========================
+         FORMULAIRE DE RECHERCHE
+         ========================= -->
 
-        <span
-                class="date-chip"
-                th:text="${today}">
-        </span>
+    <form
+            class="panel search-panel mb-4"
+            method="get"
+            th:action="@{/home}">
 
-    </div>
 
+        <!-- TÉLÉPHONE -->
+
+        <div class="field">
+
+            <label for="telephone">
+                Téléphone
+            </label>
+
+            <input
+                    type="text"
+                    id="telephone"
+                    name="telephone"
+                    class="form-control"
+                    placeholder="Ex : 0341234567"
+                    th:value="${telephone}">
+
+        </div>
+
+
+        <!-- DATE DEBUT -->
+
+        <div class="field">
+
+            <label for="dateDebut">
+                Du
+            </label>
+
+            <input
+                    type="date"
+                    id="dateDebut"
+                    name="dateDebut"
+                    class="form-control"
+                    th:value="${dateDebut}">
+
+        </div>
+
+
+        <!-- DATE FIN -->
+
+        <div class="field">
+
+            <label for="dateFin">
+                Au
+            </label>
+
+            <input
+                    type="date"
+                    id="dateFin"
+                    name="dateFin"
+                    class="form-control"
+                    th:value="${dateFin}">
+
+        </div>
+
+
+        <!-- BOUTON RECHERCHER -->
+
+        <button
+                type="submit"
+                class="btn btn-dark">
+
+            Rechercher
+
+        </button>
+
+
+        <!-- BOUTON RESET -->
+
+        <a
+                th:href="@{/home}"
+                class="btn btn-outline-secondary">
+
+            Réinitialiser
+
+        </a>
+
+    </form>
+
+
+    <!-- =========================
+         TABLEAU DES POINTAGES
+         ========================= -->
 
     <div class="panel">
 
+
+        <!-- =========================
+             EN-TÊTE DU TABLEAU
+             ========================= -->
+
         <div class="panel-head">
 
-            <h2>
-                Pointage du jour
-            </h2>
 
-            <p>
+            <!--
+                TITRE + BOUTON PDF
+            -->
+
+            <div class="table-header">
+
+
+                <!-- =========================
+                     TITRE À GAUCHE
+                     ========================= -->
+
+                <div class="table-title">
+
+
+                    <!-- TITRE PAR DÉFAUT -->
+
+                    <h2
+                            th:if="${rechercheActive != true}">
+
+                        Pointage du jour
+
+                    </h2>
+
+
+                    <!-- TITRE APRÈS RECHERCHE -->
+
+                    <h2
+                            th:if="${rechercheActive == true}">
+
+                        Pointages du
+
+                        <span
+                                th:text="${dateDebut}">
+                        </span>
+
+                        au
+
+                        <span
+                                th:text="${dateFin}">
+                        </span>
+
+                    </h2>
+
+                </div>
+
+
+                <!-- =========================
+                     BOUTON PDF À DROITE
+                     ========================= -->
+
+                <div class="table-actions">
+
+
+                    <!--
+                        BOUTON ACTIF
+                        UNIQUEMENT S'IL Y A DES LIGNES
+                    -->
+
+                    <a
+                            th:if="${rows != null and !#lists.isEmpty(rows)}"
+
+                            th:href="@{/home/pdf(
+                                dateDebut=${dateDebut},
+                                dateFin=${dateFin},
+                                telephone=${telephone}
+                            )}"
+
+                            class="btn-pdf">
+
+                        📄
+
+                        <span>
+                            Exporter en PDF
+                        </span>
+
+                    </a>
+
+
+                    <!--
+                        BOUTON DÉSACTIVÉ
+                        SI AUCUNE LIGNE
+                    -->
+
+                    <span
+                            th:if="${rows == null or #lists.isEmpty(rows)}"
+
+                            class="btn-pdf-disabled">
+
+                        📄
+
+                        <span>
+                            Exporter en PDF
+                        </span>
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 DESCRIPTION
+                 ========================= -->
+
+
+            <!-- DESCRIPTION JOUR -->
+
+            <p
+                    th:if="${rechercheActive != true}">
+
                 Suivi des entrées et sorties enregistrées aujourd'hui.
+
+            </p>
+
+
+            <!-- DESCRIPTION RECHERCHE -->
+
+            <p
+                    th:if="${rechercheActive == true}">
+
+                Suivi des entrées et sorties enregistrées sur la période sélectionnée.
+
             </p>
 
         </div>
 
 
+        <!-- =========================
+             TABLE
+             ========================= -->
+
         <div class="table-responsive">
 
+
             <table class="roster">
+
+
+                <!-- =========================
+                     EN-TÊTE
+                     ========================= -->
 
                 <thead>
 
                 <tr>
 
                     <th>
-                        Matricule
+                        Téléphone
                     </th>
 
                     <th>
@@ -209,11 +876,15 @@
                     </th>
 
                     <th>
-                        Heure début
+                        Date
                     </th>
 
                     <th>
-                        Heure fin
+                        Heure
+                    </th>
+
+                    <th>
+                        Type
                     </th>
 
                 </tr>
@@ -221,50 +892,130 @@
                 </thead>
 
 
+                <!-- =========================
+                     CORPS
+                     ========================= -->
+
                 <tbody>
 
+
+                <!--
+                    Entrée = ligne verte
+                    Sortie = ligne rouge
+                -->
+
                 <tr
-                        th:each="r : ${rows}">
+                        th:each="p : ${rows}"
+
+                        th:classappend="${p.type == 'Entrée'}
+                            ? 'pointage-entree'
+                            : 'pointage-sortie'">
+
+
+                    <!-- =========================
+                         TÉLÉPHONE
+                         ========================= -->
 
                     <td
-                            class="matricule"
-                            th:text="${r.matricule}">
+                            th:text="${p.telephone}">
+
                     </td>
 
+
+                    <!-- =========================
+                         AGENT
+                         ========================= -->
+
                     <td
-                            th:text="${r.agent}">
+                            th:text="${p.agent}">
+
                     </td>
+
+
+                    <!-- =========================
+                         SITE
+                         ========================= -->
 
                     <td
                             class="site"
-                            th:text="${r.site}">
+
+                            th:text="${p.site}">
+
                     </td>
 
-                    <td
-                            th:text="${r.heure_debut}">
+
+                    <!-- =========================
+                         DATE
+                         ========================= -->
+
+                    <td>
+
+                        <span
+                                th:if="${p.date != null}"
+
+                                th:text="${#dates.format(p.date, 'dd/MM/yyyy')}">
+
+                        </span>
+
+                        <span
+                                th:if="${p.date == null}">
+
+                            -
+
+                        </span>
+
                     </td>
 
+
+                    <!-- =========================
+                         HEURE
+                         ========================= -->
+
                     <td
-                            th:text="${r.heure_fin}">
+                            th:text="${p.heure}">
+
                     </td>
+
+
+                    <!-- =========================
+                         TYPE
+                         ========================= -->
+
+                    <td
+                            th:classappend="${p.type == 'Entrée'}
+                                ? 'type-entree'
+                                : 'type-sortie'"
+
+                            th:text="${p.type}">
+
+                    </td>
+
 
                 </tr>
 
 
+                <!-- =========================
+                     AUCUN RÉSULTAT
+                     ========================= -->
+
                 <tr
-                        th:if="${#lists.isEmpty(rows)}">
+                        th:if="${rows == null or #lists.isEmpty(rows)}">
+
 
                     <td
-                            colspan="5"
+                            colspan="6"
                             class="empty-state">
 
                         <span>
-                            Aucun pointage aujourd'hui.
+
+                            Aucun pointage sur cette période.
+
                         </span>
 
                     </td>
 
                 </tr>
+
 
                 </tbody>
 
@@ -277,8 +1028,14 @@
 </div>
 
 
-<!-- Bootstrap JS bundle -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<!-- =========================
+     BOOTSTRAP JS
+     ========================= -->
+
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
+</script>
+
 
 </body>
 
