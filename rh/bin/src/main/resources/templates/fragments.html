@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<nav th:fragment="navbar"
+     class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+
+    <div class="container-fluid">
+
+        <a class="navbar-brand fw-bold"
+           th:href="@{/}">
+            RH
+        </a>
+
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarRH">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <div class="collapse navbar-collapse"
+             id="navbarRH">
+
+            <ul class="navbar-nav me-auto">
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       th:href="@{/}">
+                        Accueil
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       th:href="@{/agents}">
+                        Agents
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       th:href="@{/sites}">
+                        Sites
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       th:href="@{/affectations}">
+                        Affectations
+                    </a>
+
+                </li>
+
+            </ul>
+
+            <form th:action="@{/logout}"
+                  method="post"
+                  class="d-flex">
+
+                <button
+                    type="submit"
+                    class="btn btn-outline-light">
+
+                    Déconnexion
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</nav>
+
+</body>
+</html>

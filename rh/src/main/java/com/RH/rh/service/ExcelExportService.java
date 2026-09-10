@@ -1,78 +1,269 @@
 package com.RH.rh.service;
 
-import com.RH.rh.model.Affectation;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ExcelExportService {
 
-    private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    private static final String[] EN_TETES = {
-            "Date", "Matricule", "Agent", "Poste", "Lieu / Site",
-            "Heure debut", "Heure fin", "Statut", "Commentaire"
-    };
+    public byte[] export(
+            List<Map<String, Object>> rows,
+            LocalDate debut,
+            LocalDate fin
+    ) throws IOException {
 
-    public byte[] exporterAffectations(List<Affectation> affectations) throws IOException {
-        try (Workbook workbook = new XSSFWorkbook();
-             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
-            Sheet sheet = workbook.createSheet("Affectations");
+        try (
+                Workbook workbook = new XSSFWorkbook();
+                ByteArrayOutputStream outputStream =
+                        new ByteArrayOutputStream()
+        ) {
 
-            CellStyle styleEntete = creerStyleEntete(workbook);
-            CellStyle styleDate = workbook.createCellStyle();
-            styleDate.setDataFormat(workbook.getCreationHelper().createDataFormat().getFormat("dd/mm/yyyy"));
 
-            Row entete = sheet.createRow(0);
-            for (int i = 0; i < EN_TETES.length; i++) {
-                Cell cell = entete.createCell(i);
-                cell.setCellValue(EN_TETES[i]);
-                cell.setCellStyle(styleEntete);
+            Sheet sheet =
+                    workbook.createSheet("Pointage");
+
+
+            // =====================================================
+            // STYLE TITRE
+            // =====================================================
+
+            CellStyle titleStyle =
+                    workbook.createCellStyle();
+
+            Font titleFont =
+                    workbook.createFont();
+
+            titleFont.setBold(true);
+            titleFont.setFontHeightInPoints((short) 16);
+
+            titleStyle.setFont(titleFont);
+
+
+            // =====================================================
+            // STYLE ENTETE
+            // =====================================================
+
+            CellStyle headerStyle =
+                    workbook.createCellStyle();
+
+            Font headerFont =
+                    workbook.createFont();
+
+            headerFont.setBold(true);
+
+            headerStyle.setFont(headerFont);
+
+
+            // =====================================================
+            // TITRE
+            // =====================================================
+
+            Row titleRow =
+                    sheet.createRow(0);
+
+            Cell titleCell =
+                    titleRow.createCell(0);
+
+            titleCell.setCellValue(
+                    "POINTAGE RH"
+            );
+
+            titleCell.setCellStyle(
+                    titleStyle
+            );
+
+
+            Row periodRow =
+                    sheet.createRow(1);
+
+            periodRow.createCell(0)
+                    .setCellValue(
+                            "Période : "
+                                    + debut
+                                    + " au "
+                                    + fin
+                    );
+
+
+            // =====================================================
+            // ENTETES
+            // =====================================================
+
+            Row headerRow =
+                    sheet.createRow(3);
+
+
+            String[] headers = {
+
+                    "Date",
+
+                    "Matricule",
+
+                    "Agent",
+
+                    "Site / Lieu",
+
+                    "Adresse",
+
+                    "Heure début",
+
+                    "Heure fin",
+
+                    "Observation"
+
+            };
+
+
+            for (
+                    int i = 0;
+                    i < headers.length;
+                    i++
+            ) {
+
+                Cell cell =
+                        headerRow.createCell(i);
+
+                cell.setCellValue(
+                        headers[i]
+                );
+
+                cell.setCellStyle(
+                        headerStyle
+                );
             }
 
-            int ligne = 1;
-            for (Affectation a : affectations) {
-                Row row = sheet.createRow(ligne++);
-                row.createCell(0).setCellValue(
-                        a.getDateAffectation() != null ? a.getDateAffectation().format(FMT) : "");
-                row.createCell(1).setCellValue(nvl(a.getAgent() != null ? a.getAgent().getMatricule() : null));
-                row.createCell(2).setCellValue(a.getAgent() != null ? a.getAgent().getNomComplet() : "");
-                row.createCell(3).setCellValue(nvl(a.getAgent() != null ? a.getAgent().getPoste() : null));
-                row.createCell(4).setCellValue(a.getLieuAffiche());
-                row.createCell(5).setCellValue(nvl(a.getHeureDebut()));
-                row.createCell(6).setCellValue(nvl(a.getHeureFin()));
-                row.createCell(7).setCellValue(nvl(a.getStatut()));
-                row.createCell(8).setCellValue(nvl(a.getCommentaire()));
+
+            // =====================================================
+            // DONNEES
+            // =====================================================
+
+            int rowIndex = 4;
+
+
+            for (
+                    Map<String, Object> data :
+                    rows
+            ) {
+
+                Row row =
+                        sheet.createRow(
+                                rowIndex++
+                        );
+
+
+                row.createCell(0)
+                        .setCellValue(
+                                value(
+                                        data,
+                                        "date_affectation"
+                                )
+                        );
+
+
+                row.createCell(1)
+                        .setCellValue(
+                                value(
+                                        data,
+                                        "matricule"
+                                )
+                        );
+
+
+                row.createCell(2)
+                        .setCellValue(
+                                value(
+                                        data,
+                                        "agent"
+                                )
+                        );
+
+
+                row.createCell(3)
+                        .setCellValue(
+                                value(
+                                        data,
+                                        "site"
+                                )
+                        );
+
+
+                row.createCell(4)
+                        .setCellValue(
+                                value(
+                                        data,
+                                        "adresse"
+                                )
+                        );
+
+
+                row.createCell(5)
+                        .setCellValue(
+                                value(
+                                        data,
+                                        "heure_debut"
+                                )
+                        );
+
+
+                row.createCell(6)
+                        .setCellValue(
+                                value(
+                                        data,
+                                        "heure_fin"
+                                )
+                        );
+
+
+                row.createCell(7)
+                        .setCellValue(
+                                value(
+                                        data,
+                                        "observation"
+                                )
+                        );
             }
 
-            for (int i = 0; i < EN_TETES.length; i++) {
+
+            // =====================================================
+            // LARGEUR DES COLONNES
+            // =====================================================
+
+            for (int i = 0; i < headers.length; i++) {
+
                 sheet.autoSizeColumn(i);
+
             }
 
-            workbook.write(out);
-            return out.toByteArray();
+
+            workbook.write(
+                    outputStream
+            );
+
+
+            return outputStream.toByteArray();
         }
     }
 
-    private CellStyle creerStyleEntete(Workbook workbook) {
-        CellStyle style = workbook.createCellStyle();
-        Font font = workbook.createFont();
-        font.setBold(true);
-        font.setColor(IndexedColors.WHITE.getIndex());
-        style.setFont(font);
-        style.setFillForegroundColor(IndexedColors.DARK_BLUE.getIndex());
-        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        return style;
-    }
 
-    private String nvl(String s) {
-        return s != null ? s : "";
+    private String value(
+            Map<String, Object> row,
+            String key
+    ) {
+
+        Object value =
+                row.get(key);
+
+        return value == null
+                ? ""
+                : value.toString();
     }
 }

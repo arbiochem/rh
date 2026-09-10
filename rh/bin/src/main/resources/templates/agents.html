@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html
+        lang="fr"
+        xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>
+        RH - Agents
+    </title>
+
+    <link
+            rel="stylesheet"
+            href="/style.css">
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+
+</head>
+
+
+<body>
+
+<nav
+        th:replace="~{fragments :: nav}">
+</nav>
+
+
+<div class="container">
+
+    <h1>
+        Gestion des agents
+    </h1>
+
+
+    <div class="card">
+
+        <h2>
+            Créer un agent
+        </h2>
+
+
+        <form
+                method="post"
+                action="/agents"
+                th:object="${agent}">
+
+
+            <div class="grid">
+
+
+                <div>
+
+                    <label>
+                        Matricule
+                    </label>
+
+                    <input
+                            type="text"
+                            th:field="*{matricule}"
+                            required>
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Nom
+                    </label>
+
+                    <input
+                            type="text"
+                            th:field="*{nom}"
+                            required>
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Prénom
+                    </label>
+
+                    <input
+                            type="text"
+                            th:field="*{prenom}"
+                            required>
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Téléphone
+                    </label>
+
+                    <input
+                            type="text"
+                            th:field="*{telephone}">
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Email
+                    </label>
+
+                    <input
+                            type="email"
+                            th:field="*{email}">
+
+                </div>
+
+
+            </div>
+
+
+            <br>
+
+
+            <button type="submit">
+                Enregistrer
+            </button>
+
+
+        </form>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>
+            Liste des agents
+        </h2>
+
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>
+                    Matricule
+                </th>
+
+                <th>
+                    Nom
+                </th>
+
+                <th>
+                    Téléphone
+                </th>
+
+                <th>
+                    Email
+                </th>
+
+                <th>
+                    Action
+                </th>
+
+            </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+            <tr
+                    th:each="agent : ${agents}">
+
+
+                <td
+                        th:text="${agent.matricule}">
+                </td>
+
+
+                <td
+                        th:text="${agent.nom + ' ' + agent.prenom}">
+                </td>
+
+
+                <td
+                        th:text="${agent.telephone}">
+                </td>
+
+
+                <td
+                        th:text="${agent.email}">
+                </td>
+
+
+                <td>
+
+                    <form
+                            method="post"
+                            th:action="@{'/agents/delete/' + ${agent.id}}">
+
+                        <button
+                                type="submit"
+                                class="danger">
+
+                            Supprimer
+
+                        </button>
+
+                    </form>
+
+                </td>
+
+
+            </tr>
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+</div>
+
+</body>
+
+</html>

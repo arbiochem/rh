@@ -1,18 +1,24 @@
 package com.RH.rh.controller;
 
-import com.RH.rh.model.Affectation;
-import com.RH.rh.model.Agent;
-import com.RH.rh.model.Site;
-import com.RH.rh.repository.AffectationRepository;
+import com.RH.rh.model.AffectationForm;
 import com.RH.rh.repository.AgentRepository;
-import com.RH.rh.repository.SiteRepository;
+import com.RH.rh.repository.AffectationRepository;
+import com.RH.rh.service.ExcelExportService;
+
+import jakarta.validation.Valid;
+
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/affectations")
@@ -20,88 +26,308 @@ public class AffectationController {
 
     private final AffectationRepository affectationRepository;
     private final AgentRepository agentRepository;
-    private final SiteRepository siteRepository;
+    private final ExcelExportService excelExportService;
 
-    public AffectationController(AffectationRepository affectationRepository,
-                                  AgentRepository agentRepository,
-                                  SiteRepository siteRepository) {
+    public AffectationController(
+            AffectationRepository affectationRepository,
+            AgentRepository agentRepository,
+            ExcelExportService excelExportService
+    ) {
         this.affectationRepository = affectationRepository;
         this.agentRepository = agentRepository;
-        this.siteRepository = siteRepository;
-    }
-
-    @GetMapping
-    public String liste(@RequestParam(required = false) String date, Model model) {
-        LocalDate jour = (date != null && !date.isBlank()) ? LocalDate.parse(date) : LocalDate.now();
-        model.addAttribute("affectations", affectationRepository.findByDateAffectation(jour));
-        model.addAttribute("jour", jour);
-        return "affectations/list";
-    }
-
-    @GetMapping("/nouveau")
-    public String formulaireNouveau(Model model) {
-        model.addAttribute("agents", agentRepository.findAll());
-        model.addAttribute("sites", siteRepository.findAll());
-        model.addAttribute("aujourdHui", LocalDate.now());
-        return "affectations/form";
+        this.excelExportService = excelExportService;
     }
 
     /**
-     * Cree l'affectation journaliere d'un agent : un enregistrement est cree
-     * pour chaque site coche, plus un enregistrement supplementaire si un
-     * lieu libre (hors liste des sites) est renseigne.
+     * =========================================================
+     * LISTE + RECHERCHE
+     * URL : /affectations
+     *
+     * Exemples :
+     * /affectations
+     * /affectations?q=Dupont
+     * /affectations?debut=2026-09-01&fin=2026-09-30
+     * /affectations?q=Dupont&debut=2026-09-01&fin=2026-09-30
+     * =========================================================
      */
-    @PostMapping("/enregistrer")
-    public String enregistrer(@RequestParam Long agentId,
-                               @RequestParam String dateAffectation,
-                               @RequestParam(required = false) List<Long> siteIds,
-                               @RequestParam(required = false) String lieuLibre,
-                               @RequestParam(required = false) String heureDebut,
-                               @RequestParam(required = false) String heureFin,
-                               @RequestParam(required = false) String statut,
-                               @RequestParam(required = false) String commentaire) {
+    @GetMapping
+    public String index(
+            @RequestParam(value = "q", required = false) String q,
+            @RequestParam(value = "debut", required = false) LocalDate debut,
+            @RequestParam(value = "fin", required = false) LocalDate fin,
+            Model model
+    ) {
 
-        Agent agent = agentRepository.findById(agentId)
-                .orElseThrow(() -> new IllegalArgumentException("Agent introuvable : " + agentId));
-        LocalDate date = LocalDate.parse(dateAffectation);
+        /*
+         * Vérification de la plage de dates
+         */
+        if (debut != null && fin != null && debut.isAfter(fin)) {
 
-        List<Affectation> aCreer = new ArrayList<>();
+            model.addAttribute(
+                    "error",
+                    "La date de début doit être antérieure ou égale à la date de fin."
+            );
 
-        if (siteIds != null) {
-            for (Long siteId : siteIds) {
-                Site site = siteRepository.findById(siteId).orElse(null);
-                if (site == null) continue;
-                Affectation a = new Affectation();
-                a.setAgent(agent);
-                a.setSite(site);
-                a.setDateAffectation(date);
-                a.setHeureDebut(heureDebut);
-                a.setHeureFin(heureFin);
-                a.setStatut(statut != null && !statut.isBlank() ? statut : "PLANIFIE");
-                a.setCommentaire(commentaire);
-                aCreer.add(a);
-            }
+            /*
+             * On inverse temporairement pour éviter
+             * une requête SQL incorrecte.
+             */
+            LocalDate temp = debut;
+            debut = fin;
+            fin = temp;
         }
 
-        if (lieuLibre != null && !lieuLibre.isBlank()) {
-            Affectation a = new Affectation();
-            a.setAgent(agent);
-            a.setLieuLibre(lieuLibre);
-            a.setDateAffectation(date);
-            a.setHeureDebut(heureDebut);
-            a.setHeureFin(heureFin);
-            a.setStatut(statut != null && !statut.isBlank() ? statut : "PLANIFIE");
-            a.setCommentaire(commentaire);
-            aCreer.add(a);
-        }
+        /*
+         * Formulaire d'affectation
+         */
+        AffectationForm form = new AffectationForm();
 
-        affectationRepository.saveAll(aCreer);
-        return "redirect:/affectations?date=" + date;
+        /*
+         * Date par défaut du formulaire d'affectation
+         */
+        form.setDateAffectation(
+                LocalDate.now()
+        );
+
+        model.addAttribute(
+                "form",
+                form
+        );
+
+        /*
+         * Liste des agents
+         */
+        model.addAttribute(
+                "agents",
+                agentRepository.findAll()
+        );
+
+        /*
+         * Paramètres de recherche
+         *
+         * IMPORTANT :
+         * Ces attributs sont nécessaires pour :
+         *
+         * th:value="${q}"
+         * th:value="${debut}"
+         * th:value="${fin}"
+         */
+        model.addAttribute(
+                "q",
+                q
+        );
+
+        model.addAttribute(
+                "debut",
+                debut
+        );
+
+        model.addAttribute(
+                "fin",
+                fin
+        );
+
+        /*
+         * Recherche
+         *
+         * On utilise TOUJOURS la méthode search().
+         * Si q/debut/fin sont null, elle retourne
+         * toutes les affectations.
+         */
+        List<Map<String, Object>> affectations =
+                affectationRepository.search(
+                        q,
+                        debut,
+                        fin
+                );
+
+        model.addAttribute(
+                "affectations",
+                affectations
+        );
+
+        return "affectations";
     }
 
-    @PostMapping("/{id}/supprimer")
-    public String supprimer(@PathVariable Long id, @RequestParam(required = false) String date) {
-        affectationRepository.deleteById(id);
-        return "redirect:/affectations" + (date != null ? "?date=" + date : "");
+
+    /**
+     * =========================================================
+     * ENREGISTREMENT D'UNE AFFECTATION
+     * =========================================================
+     */
+    @PostMapping
+    public String save(
+            @Valid
+            @ModelAttribute("form")
+            AffectationForm form,
+
+            BindingResult result,
+
+            Model model
+    ) {
+
+        if (result.hasErrors()) {
+
+            /*
+             * Recharger les agents
+             */
+            model.addAttribute(
+                    "agents",
+                    agentRepository.findAll()
+            );
+
+            /*
+             * Recharger la liste des affectations
+             */
+            model.addAttribute(
+                    "affectations",
+                    affectationRepository.findAll()
+            );
+
+            /*
+             * Paramètres de recherche vides
+             */
+            model.addAttribute("q", null);
+            model.addAttribute("debut", null);
+            model.addAttribute("fin", null);
+
+            return "affectations";
+        }
+
+        /*
+         * Enregistrement
+         */
+        affectationRepository.save(form);
+
+        /*
+         * Retour vers la page
+         */
+        return "redirect:/affectations";
+    }
+
+
+    /**
+     * =========================================================
+     * SUPPRESSION
+     *
+     * URL :
+     * POST /affectations/{id}/delete
+     * =========================================================
+     */
+    @PostMapping("/{id}/delete")
+    public String delete(
+            @PathVariable Long id
+    ) {
+
+        affectationRepository.delete(id);
+
+        return "redirect:/affectations";
+    }
+
+
+        @GetMapping("/{id}/edit")
+        public String edit(
+                @PathVariable Long id,
+                Model model
+        ) {
+
+        System.out.println(">>> EDIT affectation id = " + id);
+
+        Map<String, Object> affectation =
+                affectationRepository.findById(id);
+
+        System.out.println(">>> affectation = " + affectation);
+
+        if (affectation == null) {
+                System.out.println(">>> AFFECTATION NULL");
+                return "redirect:/affectations";
+        }
+
+        System.out.println(">>> clés = " + affectation.keySet());
+
+        model.addAttribute("affectation", affectation);
+
+        model.addAttribute(
+                "agents",
+                agentRepository.findAll()
+        );
+
+        return "edit_affectation";
+        }
+    /**
+     * =========================================================
+     * EXPORT EXCEL
+     *
+     * /affectations/export?debut=2026-09-01&fin=2026-09-30
+     * =========================================================
+     */
+
+    @PostMapping("/edit/{id}")
+    public String update(
+
+            @PathVariable Long id,
+
+            @Valid
+            @ModelAttribute("affectation")
+            AffectationForm affectation,
+
+            BindingResult result
+
+    ) {
+
+        if (result.hasErrors()) {
+
+            return "edit_affectation";
+        }
+
+        affectation.setId(id);
+        affectationRepository.update(affectation);
+
+        return "redirect:/affectations";
+    }
+
+    @GetMapping("/export")
+    public ResponseEntity<ByteArrayResource> export(
+            @RequestParam LocalDate debut,
+            @RequestParam LocalDate fin
+    ) throws Exception {
+
+        var rows =
+                affectationRepository.findBetween(
+                        debut,
+                        fin
+                );
+
+        byte[] excel =
+                excelExportService.export(
+                        rows,
+                        debut,
+                        fin
+                );
+
+        String filename =
+                "Pointage_"
+                        + debut
+                        + "_au_"
+                        + fin
+                        + ".xlsx";
+
+        ByteArrayResource resource =
+                new ByteArrayResource(excel);
+
+        return ResponseEntity.ok()
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + filename + "\""
+                )
+                .contentType(
+                        MediaType.parseMediaType(
+                                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                        )
+                )
+                .contentLength(
+                        excel.length
+                )
+                .body(resource);
     }
 }

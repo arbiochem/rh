@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+
+<html
+        lang="fr"
+        xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <title>
+        RH - Tableau de bord
+    </title>
+
+    <!-- Bootstrap 5 (structure / nav) -->
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+            rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link
+            rel="stylesheet"
+            href="/style.css">
+
+    <style>
+
+        :root {
+            --ink: #16283D;
+            --ink-soft: #24384F;
+            --sand: #F6F4EF;
+            --gold: #B98A3E;
+            --text: #1F2937;
+            --muted: #6B7280;
+            --line: #E4E0D6;
+        }
+
+        body {
+            background: var(--sand) !important;
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+        }
+
+        .page-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1.75rem;
+        }
+
+        .page-head h1 {
+            font-family: 'Fraunces', serif;
+            font-weight: 500;
+            font-size: 1.9rem;
+            color: var(--ink);
+            margin: 0;
+        }
+
+        .date-chip {
+            font-size: 0.9rem;
+            color: var(--muted);
+            border-left: 2px solid var(--gold);
+            padding-left: 0.6rem;
+        }
+
+        .panel {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .panel-head {
+            padding: 1.1rem 1.5rem;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .panel-head h2 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--ink);
+            margin: 0;
+        }
+
+        .panel-head p {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin: 0.2rem 0 0;
+        }
+
+        table.roster {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+        }
+
+        table.roster thead th {
+            text-align: left;
+            font-weight: 500;
+            font-size: 0.8rem;
+            color: var(--muted);
+            padding: 0.7rem 1.5rem;
+            border-bottom: 1px solid var(--line);
+        }
+
+        table.roster tbody td {
+            padding: 0.85rem 1.5rem;
+            border-bottom: 1px solid var(--line);
+            vertical-align: middle;
+        }
+
+        table.roster tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        table.roster tbody tr:hover td {
+            background: var(--sand);
+        }
+
+        table.roster td.matricule {
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        table.roster td.site {
+            color: var(--muted);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3.5rem 1.5rem;
+            color: var(--muted);
+        }
+
+        .empty-state span {
+            display: block;
+            font-size: 0.92rem;
+        }
+
+    </style>
+
+</head>
+
+
+<body class="bg-light">
+
+
+<nav
+        th:replace="~{fragments :: nav}">
+</nav>
+
+
+<div class="container py-4">
+
+    <div class="page-head">
+
+        <h1>
+            Tableau de bord
+        </h1>
+
+        <span
+                class="date-chip"
+                th:text="${today}">
+        </span>
+
+    </div>
+
+
+    <div class="panel">
+
+        <div class="panel-head">
+
+            <h2>
+                Pointage du jour
+            </h2>
+
+            <p>
+                Suivi des entrées et sorties enregistrées aujourd'hui.
+            </p>
+
+        </div>
+
+
+        <div class="table-responsive">
+
+            <table class="roster">
+
+                <thead>
+
+                <tr>
+
+                    <th>
+                        Matricule
+                    </th>
+
+                    <th>
+                        Agent
+                    </th>
+
+                    <th>
+                        Site / Lieu
+                    </th>
+
+                    <th>
+                        Heure début
+                    </th>
+
+                    <th>
+                        Heure fin
+                    </th>
+
+                </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                <tr
+                        th:each="r : ${rows}">
+
+                    <td
+                            class="matricule"
+                            th:text="${r.matricule}">
+                    </td>
+
+                    <td
+                            th:text="${r.agent}">
+                    </td>
+
+                    <td
+                            class="site"
+                            th:text="${r.site}">
+                    </td>
+
+                    <td
+                            th:text="${r.heure_debut}">
+                    </td>
+
+                    <td
+                            th:text="${r.heure_fin}">
+                    </td>
+
+                </tr>
+
+
+                <tr
+                        th:if="${#lists.isEmpty(rows)}">
+
+                    <td
+                            colspan="5"
+                            class="empty-state">
+
+                        <span>
+                            Aucun pointage aujourd'hui.
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Bootstrap JS bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

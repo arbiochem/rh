@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+
+<html
+        lang="fr"
+        xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>
+        RH - Pointage
+    </title>
+
+    <link
+            rel="stylesheet"
+            href="/style.css">
+
+</head>
+
+
+<body>
+
+
+<nav
+        th:replace="~{fragments :: nav}">
+</nav>
+
+
+<div class="container">
+
+
+    <h1>
+        Affectation / Pointage
+    </h1>
+
+
+    <!-- ================================================= -->
+    <!-- FORMULAIRE -->
+    <!-- ================================================= -->
+
+
+    <div class="card">
+
+
+        <h2>
+            Affecter un agent
+        </h2>
+
+
+        <form
+                method="post"
+                action="/affectations"
+                th:object="${form}">
+
+
+            <div class="grid">
+
+
+                <!-- AGENT -->
+
+                <div>
+
+                    <label>
+                        Agent
+                    </label>
+
+                    <select
+                            th:field="*{agentId}"
+                            required>
+
+                        <option value="">
+                            -- Sélectionner un agent --
+                        </option>
+
+
+                        <option
+                                th:each="agent : ${agents}"
+                                th:value="${agent.id}"
+                                th:text="${agent.matricule + ' - ' + agent.nom + ' ' + agent.prenom}">
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- DATE -->
+
+                <div>
+
+                    <label>
+                        Date
+                    </label>
+
+                    <input
+                            type="date"
+                            th:field="*{dateAffectation}"
+                            required>
+
+                </div>
+
+
+                <!-- HEURE DEBUT -->
+
+                <div>
+
+                    <label>
+                        Heure début
+                    </label>
+
+                    <input
+                            type="time"
+                            th:field="*{heureDebut}">
+
+                </div>
+
+
+                <!-- HEURE FIN -->
+
+                <div>
+
+                    <label>
+                        Heure fin
+                    </label>
+
+                    <input
+                            type="time"
+                            th:field="*{heureFin}">
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- SITES -->
+            <!-- ================================================= -->
+
+
+            <div class="sites-section">
+
+
+                <label>
+
+                    Sites / lieux
+
+                    <span class="muted">
+                        (plusieurs choix possibles)
+                    </span>
+
+                </label>
+
+
+                <div class="site-checks">
+
+
+                    <label
+                            class="site-check"
+                            th:each="site : ${sites}">
+
+
+                        <input
+                                type="checkbox"
+                                name="siteIds"
+                                th:value="${site.id}">
+
+
+                        <span
+                                th:text="${site.nom}">
+                        </span>
+
+
+                    </label>
+
+
+                </div>
+
+
+            </div>
+
+
+            <br>
+
+
+            <!-- OBSERVATION -->
+
+
+            <label>
+                Observation
+            </label>
+
+
+            <textarea
+                    th:field="*{observation}"
+                    rows="3">
+            </textarea>
+
+
+            <br>
+            <br>
+
+
+            <button
+                    type="submit">
+
+                Enregistrer l'affectation
+
+            </button>
+
+
+        </form>
+
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- DATE -->
+    <!-- ================================================= -->
+
+
+    <div class="card">
+
+
+        <form
+                method="get"
+                action="/affectations">
+
+
+            <label>
+                Afficher le pointage du :
+            </label>
+
+
+            <input
+                    type="date"
+                    name="date"
+                    th:value="${date}"
+                    onchange="this.form.submit()">
+
+
+        </form>
+
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- POINTAGE -->
+    <!-- ================================================= -->
+
+
+    <div class="card">
+
+
+        <h2>
+
+            Pointage du
+
+            <span
+                    th:text="${date}">
+            </span>
+
+        </h2>
+
+
+        <table>
+
+
+            <thead>
+
+            <tr>
+
+                <th>
+                    Matricule
+                </th>
+
+                <th>
+                    Agent
+                </th>
+
+                <th>
+                    Site / Lieu
+                </th>
+
+                <th>
+                    Heure début
+                </th>
+
+                <th>
+                    Heure fin
+                </th>
+
+                <th>
+                    Observation
+                </th>
+
+                <th>
+                    Action
+                </th>
+
+            </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+            <tr
+                    th:each="row : ${rows}">
+
+
+                <td
+                        th:text="${row.matricule}">
+                </td>
+
+
+                <td
+                        th:text="${row.agent}">
+                </td>
+
+
+                <td
+                        th:text="${row.site}">
+                </td>
+
+
+                <td
+                        th:text="${row.heure_debut}">
+                </td>
+
+
+                <td
+                        th:text="${row.heure_fin}">
+                </td>
+
+
+                <td
+                        th:text="${row.observation}">
+                </td>
+
+
+                <td>
+
+
+                    <form
+                            method="post"
+                            th:action="@{'/affectations/delete/' + ${row.id}}">
+
+
+                        <input
+                                type="hidden"
+                                name="date"
+                                th:value="${date}">
+
+
+                        <button
+                                class="danger">
+
+                            Supprimer
+
+                        </button>
+
+
+                    </form>
+
+
+                </td>
+
+
+            </tr>
+
+
+            <tr
+                    th:if="${#lists.isEmpty(rows)}">
+
+
+                <td
+                        colspan="7">
+
+                    Aucun pointage pour cette date.
+
+                </td>
+
+
+            </tr>
+
+
+            </tbody>
+
+
+        </table>
+
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- EXPORT -->
+    <!-- ================================================= -->
+
+
+    <div class="card">
+
+
+        <h2>
+            Export Excel
+        </h2>
+
+
+        <form
+                method="get"
+                action="/affectations/export">
+
+
+            <div class="grid">
+
+
+                <div>
+
+                    <label>
+                        Du
+                    </label>
+
+                    <input
+                            type="date"
+                            name="debut"
+                            required>
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Au
+                    </label>
+
+                    <input
+                            type="date"
+                            name="fin"
+                            required>
+
+                </div>
+
+
+            </div>
+
+
+            <br>
+
+
+            <button
+                    type="submit">
+
+                Exporter en Excel
+
+            </button>
+
+
+        </form>
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

@@ -1,10 +1,31 @@
 package com.RH.rh.repository;
 
-import com.RH.rh.model.Utilisateur;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.Map;
 
-public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> {
-    Optional<Utilisateur> findByUsername(String username);
+@Repository
+public class UtilisateurRepository {
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public UtilisateurRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public Map<String, Object> findByUsername(String username) {
+
+        return jdbcTemplate.queryForMap("""
+            SELECT
+                id,
+                username,
+                password,
+                role,
+                actif,
+                created_at
+            FROM utilisateurs
+            WHERE username = ?
+        """, username);
+    }
 }

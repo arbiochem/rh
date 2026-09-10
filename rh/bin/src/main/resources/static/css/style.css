@@ -1,0 +1,27 @@
+body {
+    background-color: #f4f6f9;
+}
+
+.app-navbar {
+    background-color: #1f2937;
+}
+
+.login-card {
+    max-width: 400px;
+    margin: 10vh auto;
+}
+
+.card-stat {
+    border: none;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.card-stat .value {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+table.table thead {
+    background-color: #eef1f6;
+}

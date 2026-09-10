@@ -1,33 +1,328 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org">
+
 <head>
+
     <meta charset="UTF-8">
-    <title>RH - Connexion</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link th:href="@{/css/style.css}" rel="stylesheet">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <title>Connexion - RH</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+
+        :root {
+            --terracotta: #B85C36;
+            --terracotta-soft: #A44F2C;
+            --green: #4C7A57;
+            --green-soft: #3E6647;
+            --ivory: #F7F2E7;
+            --text: #2B2420;
+            --muted: #8A7F6E;
+            --line: #E6DECC;
+            --danger: #A6412B;
+            --danger-bg: #F6E7DF;
+            --success-bg: #E7EFE6;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            background: var(--ivory);
+        }
+
+        .screen {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Panneau de marque */
+
+        .brand {
+            flex: 0 0 42%;
+            background: var(--terracotta);
+            color: #FBEEE4;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 3rem;
+            overflow: hidden;
+        }
+
+        .brand::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 12% 18%, rgba(76, 122, 87, 0.28), transparent 42%),
+                repeating-linear-gradient(115deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 64px);
+            pointer-events: none;
+        }
+
+        .brand-mark {
+            font-family: 'Fraunces', serif;
+            font-size: 2rem;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            position: relative;
+        }
+
+        .brand-body {
+            position: relative;
+            max-width: 22rem;
+        }
+
+        .brand-body h1 {
+            font-family: 'Fraunces', serif;
+            font-size: 2.15rem;
+            font-weight: 500;
+            line-height: 1.25;
+            margin: 0 0 0.9rem;
+        }
+
+        .brand-body p {
+            color: #F0D9C8;
+            font-size: 0.98rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .brand-foot {
+            position: relative;
+            font-size: 0.85rem;
+            color: #E7C3AC;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .brand-foot::before {
+            content: "";
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            background: var(--green);
+            flex-shrink: 0;
+        }
+
+        /* Panneau formulaire */
+
+        .panel {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2.5rem;
+        }
+
+        .form-wrap {
+            width: 100%;
+            max-width: 22rem;
+        }
+
+        .form-wrap h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 0 0 0.35rem;
+        }
+
+        .form-wrap > p.lead {
+            color: var(--muted);
+            font-size: 0.94rem;
+            margin: 0 0 1.75rem;
+        }
+
+        .notice {
+            font-size: 0.88rem;
+            padding: 0.7rem 0.9rem;
+            border-radius: 6px;
+            margin-bottom: 1.25rem;
+            border: 1px solid transparent;
+        }
+
+        .notice.error {
+            background: var(--danger-bg);
+            color: var(--danger);
+            border-color: rgba(166, 65, 43, 0.2);
+        }
+
+        .notice.success {
+            background: var(--success-bg);
+            color: var(--green-soft);
+            border-color: rgba(76, 122, 87, 0.22);
+        }
+
+        .field {
+            margin-bottom: 1.15rem;
+        }
+
+        .field label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 0.4rem;
+        }
+
+        .field input {
+            width: 100%;
+            padding: 0.65rem 0.8rem;
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: var(--text);
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .field input:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(76, 122, 87, 0.14);
+        }
+
+        .field input::placeholder {
+            color: #B5AA97;
+        }
+
+        .submit {
+            width: 100%;
+            padding: 0.7rem;
+            margin-top: 0.4rem;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+            background: var(--terracotta);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .submit:hover {
+            background: var(--terracotta-soft);
+        }
+
+        .submit:focus-visible {
+            outline: 2px solid var(--green);
+            outline-offset: 2px;
+        }
+
+        @media (max-width: 860px) {
+
+            .screen {
+                flex-direction: column;
+            }
+
+            .brand {
+                flex: none;
+                padding: 2.2rem 1.75rem;
+            }
+
+            .brand-body h1 {
+                font-size: 1.6rem;
+            }
+
+            .brand-foot {
+                display: none;
+            }
+
+            .panel {
+                padding: 2rem 1.5rem 3rem;
+            }
+
+            .brand-logo {
+                height: 46px;
+                width: auto;
+                margin-top: 0.3rem;
+                position: relative;
+            }
+        }
+
+    </style>
+
 </head>
+
 <body>
-<div class="card login-card shadow-sm">
-    <div class="card-body p-4">
-        <h3 class="text-center mb-4">RH</h3>
-        <p class="text-center text-muted mb-4">Connectez-vous a votre espace</p>
 
-        <div th:if="${param.erreur}" class="alert alert-danger">Identifiants incorrects.</div>
-        <div th:if="${param.deconnexion}" class="alert alert-success">Vous avez ete deconnecte.</div>
+<div class="screen">
 
-        <form th:action="@{/login}" method="post">
-            <div class="mb-3">
-                <label class="form-label">Nom d'utilisateur</label>
-                <input type="text" name="username" class="form-control" required autofocus>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Mot de passe</label>
-                <input type="password" name="password" class="form-control" required>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Se connecter</button>
-        </form>
-        <p class="text-muted text-center mt-3 small">admin / admin123 (a modifier)</p>
+    <div class="brand">
+        <img
+        class="brand-logo"
+        src="/images/logo.png"
+        alt="Ar Biochem Group">
+        <div class="brand-body">
+            <h1>Un seul endroit pour gérer vos équipes.</h1>
+            <p>Pointages, affectations et suivi des agents, réunis dans un espace pensé pour votre quotidien.</p>
+        </div>
+
     </div>
+
+    <div class="panel">
+
+        <div class="form-wrap">
+
+            <h2>Bon retour</h2>
+            <p class="lead">Connectez-vous pour accéder à votre espace.</p>
+
+            <div th:if="${param.error}" class="notice error">
+                Nom d'utilisateur ou mot de passe incorrect.
+            </div>
+
+            <div th:if="${param.logout}" class="notice success">
+                Vous avez été déconnecté.
+            </div>
+
+            <form method="post" th:action="@{/login}">
+
+                <div class="field">
+                    <label for="username">Nom d'utilisateur</label>
+                    <input
+                        id="username"
+                        type="text"
+                        name="username"
+                        placeholder="Votre identifiant"
+                        required
+                        autofocus>
+                </div>
+
+                <div class="field">
+                    <label for="password">Mot de passe</label>
+                    <input
+                        id="password"
+                        type="password"
+                        name="password"
+                        placeholder="Votre mot de passe"
+                        required>
+                </div>
+
+                <button type="submit" class="submit">
+                    Se connecter
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
 </div>
+
 </body>
 </html>

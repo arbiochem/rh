@@ -1,29 +1,72 @@
 package com.RH.rh.config;
 
-import com.RH.rh.model.Utilisateur;
-import com.RH.rh.repository.UtilisateurRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class BootstrapDataInitializer {
 
     @Bean
-    public CommandLineRunner creerAdminParDefaut(UtilisateurRepository utilisateurRepository,
-                                                   PasswordEncoder passwordEncoder) {
+    public CommandLineRunner creerAdminParDefaut(
+            JdbcTemplate jdbcTemplate,
+            PasswordEncoder passwordEncoder) {
+
         return args -> {
-            if (utilisateurRepository.findByUsername("admin").isEmpty()) {
-                Utilisateur admin = new Utilisateur();
-                admin.setUsername("admin");
-                admin.setPassword(passwordEncoder.encode("admin123"));
-                admin.setRole("ADMIN");
-                admin.setActif(true);
-                utilisateurRepository.save(admin);
-                System.out.println(">>> Compte admin par defaut cree (admin / admin123). Changez ce mot de passe rapidement !");
+
+            String username = "admin";
+            String password = "admin123";
+
+            /*
+             * Vérifier si le compte admin existe
+             */
+            Integer count = jdbcTemplate.queryForObject(
+                    """
+                    SELECT COUNT(*)
+                    FROM utilisateurs
+                    WHERE username = ?
+                    """,
+                    Integer.class,
+                    username
+            );
+
+            if (count == null || count == 0) {
+
+                String hash = passwordEncoder.encode(password);
+
+                /*
+                 * Création du compte admin
+                 */
+                jdbcTemplate.update(
+                        """
+                        INSERT INTO utilisateurs
+                            (username, password, role, actif)
+                        VALUES
+                            (?, ?, ?, ?)
+                        """,
+                        username,
+                        hash,
+                        "ADMIN",
+                        1
+                );
+
+                System.out.println();
+                System.out.println("==============================================");
+                System.out.println(" COMPTE ADMIN CREE");
+                System.out.println(" Username : admin");
+                System.out.println(" Password : admin123");
+                System.out.println("==============================================");
+                System.out.println();
+
             } else {
-                System.out.println(">>> Compte admin deja present, aucune creation necessaire.");
+
+                System.out.println();
+                System.out.println("==============================================");
+                System.out.println(" COMPTE ADMIN DEJA PRESENT");
+                System.out.println("==============================================");
+                System.out.println();
             }
         };
     }

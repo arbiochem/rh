@@ -1,106 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="
+         http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.1.1</version>
+        <version>3.5.5</version>
         <relativePath/>
     </parent>
 
-    <groupId>com.RH</groupId>
+    <groupId>com.rh</groupId>
     <artifactId>rh</artifactId>
     <version>1.0.0</version>
-    <name>RH</name>
-    <description>Application de gestion RH - authentification, agents, affectations, tableau de bord, export Excel</description>
+
+    <name>rh</name>
+    <description>Application de gestion RH</description>
 
     <properties>
-        <!-- Spring Boot 4.x requiert Java 17 minimum (Jakarta EE 11 / Servlet 6.1) -->
         <java.version>17</java.version>
-        <libsql-jdbc.version>1.0.2</libsql-jdbc.version>
-        <poi.version>5.3.0</poi.version>
     </properties>
 
     <dependencies>
+
+        <!-- Spring MVC -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
+        <!-- Thymeleaf -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
+
+        <!-- JDBC : PAS DE JPA / PAS DE HIBERNATE -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.thymeleaf.extras</groupId>
-            <artifactId>thymeleaf-extras-springsecurity6</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
+
+        <!-- Validation -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-        <!-- Pilote JDBC pour Turso / libSQL -->
+        <!-- Driver JDBC libSQL / Turso -->
         <dependency>
             <groupId>com.dbeaver.jdbc</groupId>
             <artifactId>com.dbeaver.jdbc.driver.libsql</artifactId>
-            <version>${libsql-jdbc.version}</version>
+            <version>1.0.4</version>
         </dependency>
 
-        <!-- Dialecte Hibernate pour SQLite / libSQL.
-             Pas de <version> : Spring Boot 4.1.1 gere ce dependency management
-             et aligne automatiquement la version sur Hibernate ORM 7.1
-             (celle utilisee en interne par ce parent). Fixer une version 6.x
-             ici casserait la compatibilite avec Hibernate 7. -->
-        <dependency>
-            <groupId>org.hibernate.orm</groupId>
-            <artifactId>hibernate-community-dialects</artifactId>
-        </dependency>
-
-        <!-- Export Excel -->
+        <!-- Excel -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>${poi.version}</version>
+            <version>5.4.1</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity6</artifactId>
+        </dependency>
+
+        <!-- Tests -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <scope>test</scope>
-        </dependency>
+
     </dependencies>
 
     <build>
-        <finalName>rh</finalName>
+
         <plugins>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
         </plugins>
+
     </build>
 
 </project>

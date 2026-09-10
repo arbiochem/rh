@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html
+        lang="fr"
+        xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>
+        RH - Sites
+    </title>
+
+    <link
+            rel="stylesheet"
+            href="/style.css">
+
+</head>
+
+
+<body>
+
+
+<nav
+        th:replace="~{fragments :: nav}">
+</nav>
+
+
+<div class="container">
+
+
+    <h1>
+        Sites / Lieux
+    </h1>
+
+
+    <div class="card">
+
+
+        <h2>
+            Ajouter un site
+        </h2>
+
+
+        <form
+                method="post"
+                action="/sites"
+                th:object="${site}">
+
+
+            <div class="grid">
+
+
+                <div>
+
+                    <label>
+                        Nom du site / lieu
+                    </label>
+
+                    <input
+                            type="text"
+                            th:field="*{nom}"
+                            required>
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Adresse
+                    </label>
+
+                    <input
+                            type="text"
+                            th:field="*{adresse}">
+
+                </div>
+
+
+            </div>
+
+
+            <br>
+
+
+            <button>
+                Enregistrer
+            </button>
+
+
+        </form>
+
+
+    </div>
+
+
+    <div class="card">
+
+
+        <h2>
+            Liste des sites
+        </h2>
+
+
+        <table>
+
+
+            <thead>
+
+            <tr>
+
+                <th>
+                    Nom
+                </th>
+
+                <th>
+                    Adresse
+                </th>
+
+                <th>
+                    Action
+                </th>
+
+            </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+            <tr
+                    th:each="site : ${sites}">
+
+
+                <td
+                        th:text="${site.nom}">
+                </td>
+
+
+                <td
+                        th:text="${site.adresse}">
+                </td>
+
+
+                <td>
+
+                    <form
+                            method="post"
+                            th:action="@{'/sites/delete/' + ${site.id}}">
+
+                        <button
+                                class="danger">
+
+                            Supprimer
+
+                        </button>
+
+                    </form>
+
+                </td>
+
+
+            </tr>
+
+
+            </tbody>
+
+
+        </table>
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>
