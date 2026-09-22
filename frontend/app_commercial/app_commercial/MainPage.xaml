@@ -28,7 +28,7 @@
             <Entry
                 x:Name="PhoneEntry"
                 Placeholder="Numéro de téléphone"
-                Text="0342121524"
+                Text="0321278060"
                 Keyboard="Telephone" 
                 IsEnabled="False"/>
 

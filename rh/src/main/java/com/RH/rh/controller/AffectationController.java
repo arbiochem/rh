@@ -1,8 +1,11 @@
 package com.RH.rh.controller;
 
+import com.RH.rh.model.Agent;
 import com.RH.rh.model.AffectationForm;
 import com.RH.rh.repository.AgentRepository;
 import com.RH.rh.repository.AffectationRepository;
+import com.RH.rh.repository.MembreEquipeRepository;
+import com.RH.rh.repository.UtilisateurRepository;
 import com.RH.rh.service.ExcelExportService;
 
 import jakarta.validation.Valid;
@@ -11,14 +14,18 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/affectations")
@@ -26,28 +33,52 @@ public class AffectationController {
 
     private final AffectationRepository affectationRepository;
     private final AgentRepository agentRepository;
+    private final MembreEquipeRepository membreEquipeRepository;
+    private final UtilisateurRepository utilisateurRepository;
     private final ExcelExportService excelExportService;
 
     public AffectationController(
             AffectationRepository affectationRepository,
             AgentRepository agentRepository,
+            MembreEquipeRepository membreEquipeRepository,
+            UtilisateurRepository utilisateurRepository,
             ExcelExportService excelExportService
     ) {
         this.affectationRepository = affectationRepository;
         this.agentRepository = agentRepository;
+        this.membreEquipeRepository = membreEquipeRepository;
+        this.utilisateurRepository = utilisateurRepository;
         this.excelExportService = excelExportService;
+    }
+
+    /**
+     * Détermine la liste des agents affectables pour l'utilisateur connecté :
+     * - ADMIN : tous les agents.
+     * - Chef d'équipe : uniquement les agents des équipes dont il est chef.
+     * - Sinon (pas lié à un agent, ou chef d'aucune équipe) : liste vide.
+     */
+    private List<Agent> resolveAgentsPourUtilisateur(Authentication authentication) {
+
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(a -> a.equals("ROLE_ADMIN"));
+
+        if (isAdmin) {
+            return agentRepository.findAll();
+        }
+
+        Optional<Long> agentIdOpt = utilisateurRepository.findAgentIdByUsername(authentication.getName());
+        if (agentIdOpt.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return membreEquipeRepository.findAgentsDesEquipesDontChef(agentIdOpt.get());
     }
 
     /**
      * =========================================================
      * LISTE + RECHERCHE
      * URL : /affectations
-     *
-     * Exemples :
-     * /affectations
-     * /affectations?q=Dupont
-     * /affectations?debut=2026-09-01&fin=2026-09-30
-     * /affectations?q=Dupont&debut=2026-09-01&fin=2026-09-30
      * =========================================================
      */
     @GetMapping
@@ -55,12 +86,10 @@ public class AffectationController {
             @RequestParam(value = "q", required = false) String q,
             @RequestParam(value = "debut", required = false) LocalDate debut,
             @RequestParam(value = "fin", required = false) LocalDate fin,
-            Model model
+            Model model,
+            Authentication authentication
     ) {
 
-        /*
-         * Vérification de la plage de dates
-         */
         if (debut != null && fin != null && debut.isAfter(fin)) {
 
             model.addAttribute(
@@ -68,83 +97,28 @@ public class AffectationController {
                     "La date de début doit être antérieure ou égale à la date de fin."
             );
 
-            /*
-             * On inverse temporairement pour éviter
-             * une requête SQL incorrecte.
-             */
             LocalDate temp = debut;
             debut = fin;
             fin = temp;
         }
 
-        /*
-         * Formulaire d'affectation
-         */
         AffectationForm form = new AffectationForm();
+        form.setDateAffectation(LocalDate.now());
+        model.addAttribute("form", form);
 
         /*
-         * Date par défaut du formulaire d'affectation
+         * Liste des agents restreinte selon le rôle/l'équipe de l'utilisateur connecté
          */
-        form.setDateAffectation(
-                LocalDate.now()
-        );
+        model.addAttribute("agents", resolveAgentsPourUtilisateur(authentication));
 
-        model.addAttribute(
-                "form",
-                form
-        );
+        model.addAttribute("q", q);
+        model.addAttribute("debut", debut);
+        model.addAttribute("fin", fin);
 
-        /*
-         * Liste des agents
-         */
-        model.addAttribute(
-                "agents",
-                agentRepository.findAll()
-        );
-
-        /*
-         * Paramètres de recherche
-         *
-         * IMPORTANT :
-         * Ces attributs sont nécessaires pour :
-         *
-         * th:value="${q}"
-         * th:value="${debut}"
-         * th:value="${fin}"
-         */
-        model.addAttribute(
-                "q",
-                q
-        );
-
-        model.addAttribute(
-                "debut",
-                debut
-        );
-
-        model.addAttribute(
-                "fin",
-                fin
-        );
-
-        /*
-         * Recherche
-         *
-         * On utilise TOUJOURS la méthode search().
-         * Si q/debut/fin sont null, elle retourne
-         * toutes les affectations.
-         */
         List<Map<String, Object>> affectations =
-                affectationRepository.search(
-                        q,
-                        debut,
-                        fin
-                );
+                affectationRepository.search(q, debut, fin);
 
-        model.addAttribute(
-                "affectations",
-                affectations
-        );
+        model.addAttribute("affectations", affectations);
 
         return "affectations";
     }
@@ -163,30 +137,19 @@ public class AffectationController {
 
             BindingResult result,
 
-            Model model
+            Model model,
+            Authentication authentication
     ) {
 
         if (result.hasErrors()) {
 
-            /*
-             * Recharger les agents
-             */
-            model.addAttribute(
-                    "agents",
-                    agentRepository.findAll()
-            );
+            model.addAttribute("agents", resolveAgentsPourUtilisateur(authentication));
 
-            /*
-             * Recharger la liste des affectations
-             */
             model.addAttribute(
                     "affectations",
                     affectationRepository.findAll()
             );
 
-            /*
-             * Paramètres de recherche vides
-             */
             model.addAttribute("q", null);
             model.addAttribute("debut", null);
             model.addAttribute("fin", null);
@@ -194,14 +157,8 @@ public class AffectationController {
             return "affectations";
         }
 
-        /*
-         * Enregistrement
-         */
         affectationRepository.save(form);
 
-        /*
-         * Retour vers la page
-         */
         return "redirect:/affectations";
     }
 
@@ -209,9 +166,6 @@ public class AffectationController {
     /**
      * =========================================================
      * SUPPRESSION
-     *
-     * URL :
-     * POST /affectations/{id}/delete
      * =========================================================
      */
     @PostMapping("/{id}/delete")
@@ -225,42 +179,26 @@ public class AffectationController {
     }
 
 
-        @GetMapping("/{id}/edit")
-        public String edit(
-                @PathVariable Long id,
-                Model model
-        ) {
-
-        System.out.println(">>> EDIT affectation id = " + id);
+    @GetMapping("/{id}/edit")
+    public String edit(
+            @PathVariable Long id,
+            Model model,
+            Authentication authentication
+    ) {
 
         Map<String, Object> affectation =
                 affectationRepository.findById(id);
 
-        System.out.println(">>> affectation = " + affectation);
-
         if (affectation == null) {
-                System.out.println(">>> AFFECTATION NULL");
-                return "redirect:/affectations";
+            return "redirect:/affectations";
         }
-
-        System.out.println(">>> clés = " + affectation.keySet());
 
         model.addAttribute("affectation", affectation);
 
-        model.addAttribute(
-                "agents",
-                agentRepository.findAll()
-        );
+        model.addAttribute("agents", resolveAgentsPourUtilisateur(authentication));
 
         return "edit_affectation";
-        }
-    /**
-     * =========================================================
-     * EXPORT EXCEL
-     *
-     * /affectations/export?debut=2026-09-01&fin=2026-09-30
-     * =========================================================
-     */
+    }
 
     @PostMapping("/edit/{id}")
     public String update(
@@ -276,7 +214,6 @@ public class AffectationController {
     ) {
 
         if (result.hasErrors()) {
-
             return "edit_affectation";
         }
 
@@ -293,24 +230,13 @@ public class AffectationController {
     ) throws Exception {
 
         var rows =
-                affectationRepository.findBetween(
-                        debut,
-                        fin
-                );
+                affectationRepository.findBetween(debut, fin);
 
         byte[] excel =
-                excelExportService.export(
-                        rows,
-                        debut,
-                        fin
-                );
+                excelExportService.export(rows, debut, fin);
 
         String filename =
-                "Pointage_"
-                        + debut
-                        + "_au_"
-                        + fin
-                        + ".xlsx";
+                "Pointage_" + debut + "_au_" + fin + ".xlsx";
 
         ByteArrayResource resource =
                 new ByteArrayResource(excel);
@@ -325,9 +251,7 @@ public class AffectationController {
                                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                         )
                 )
-                .contentLength(
-                        excel.length
-                )
+                .contentLength(excel.length)
                 .body(resource);
     }
 }

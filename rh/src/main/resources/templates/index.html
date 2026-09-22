@@ -1,59 +1,24 @@
 <!DOCTYPE html>
-
-<html
-        lang="fr"
-        xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RH - Tableau de bord</title>
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1">
+    <!-- BOOTSTRAP 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <title>
-        RH - Tableau de bord
-    </title>
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-
-    <!-- =========================
-         BOOTSTRAP 5
-         ========================= -->
-
-    <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-            rel="stylesheet">
-
-
-    <!-- =========================
-         GOOGLE FONTS
-         ========================= -->
-
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
-
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
-
-    <link
-            href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap"
-            rel="stylesheet">
-
-
-    <!-- =========================
-         CSS PRINCIPAL
-         ========================= -->
-
-    <link
-            rel="stylesheet"
-            href="/style.css">
-
+    <!-- CSS PRINCIPAL -->
+    <link rel="stylesheet" href="/style.css">
 
     <style>
-
         :root {
-
             --ink: #16283D;
             --ink-soft: #24384F;
             --sand: #F6F4EF;
@@ -71,634 +36,399 @@
             --red-hover: #FFCDD2;
         }
 
-
-        /* =========================
-           BODY
-           ========================= */
-
+        /* BODY */
         body {
-
             background: var(--sand) !important;
-
             font-family: 'Inter', sans-serif;
-
             color: var(--text);
         }
 
-
-        /* =========================
-           EN-TÊTE PAGE
-           ========================= */
-
+        /* EN-TÊTE PAGE */
         .page-head {
-
             display: flex;
-
             align-items: baseline;
-
             justify-content: space-between;
-
             flex-wrap: wrap;
-
             gap: 0.75rem;
-
             margin-bottom: 1.75rem;
         }
 
-
         .page-head h1 {
-
             font-family: 'Fraunces', serif;
-
             font-weight: 500;
-
             font-size: 1.9rem;
-
             color: var(--ink);
-
             margin: 0;
         }
 
-
-        .date-chip {
-
-            font-size: 0.9rem;
-
-            color: var(--muted);
-
-            border-left: 2px solid var(--gold);
-
-            padding-left: 0.6rem;
+        /* COLONNE AFFECTATION */
+        table.roster td.affectation {
+            max-width: 220px;
+            cursor: help;
         }
 
-
-        /* =========================
-           PANELS
-           ========================= */
-
-        .panel {
-
-            background: #fff;
-
-            border: 1px solid var(--line);
-
-            border-radius: 10px;
-
-            overflow: hidden;
+        @media (max-width: 768px) {
+            table.roster td.affectation {
+                max-width: 140px;
+            }
         }
 
-
-        /* =========================
-           RECHERCHE
-           ========================= */
-
-        .search-panel {
-
-            padding: 1.1rem 1.5rem;
-
+        .affect-cell {
             display: flex;
-
-            gap: 1rem;
-
-            align-items: flex-end;
-
+            align-items: center;
+            gap: 0.35rem;
             flex-wrap: wrap;
         }
 
+        .affect-toggle {
+            cursor: pointer;
+            border: none;
+        }
+
+        .affect-full {
+            white-space: normal;
+            max-width: 320px;
+            color: var(--muted);
+            font-size: 0.85rem;
+            line-height: 1.4;
+            margin-top: 0.25rem;
+            flex-basis: 100%;
+        }
+
+        .d-none {
+            display: none;
+        }
+
+        .date-chip {
+            font-size: 0.9rem;
+            color: var(--muted);
+            border-left: 2px solid var(--gold);
+            padding-left: 0.6rem;
+        }
+
+        /* PANELS */
+        .panel {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        /* RECHERCHE */
+        .search-panel {
+            padding: 1.1rem 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
 
         .search-panel label {
-
             display: block;
-
             font-size: 0.8rem;
-
             color: var(--muted);
-
             margin-bottom: 0.35rem;
         }
 
-
         .search-panel .field {
-
             min-width: 160px;
         }
 
-
-        /* =========================
-           EN-TÊTE DU TABLEAU
-           ========================= */
-
+        /* EN-TÊTE DU TABLEAU */
         .panel-head {
-
             padding: 1.1rem 1.5rem;
-
             border-bottom: 1px solid var(--line);
         }
 
-
-        /*
-         * CONTENEUR PRINCIPAL :
-         * titre à gauche
-         * bouton à droite
-         */
-
         .table-header {
-
             display: flex;
-
             align-items: center;
-
             justify-content: space-between;
-
             width: 100%;
-
             gap: 1rem;
-
             min-height: 42px;
         }
 
-
-        /*
-         * PARTIE GAUCHE
-         */
-
         .table-title {
-
             flex: 1;
-
             min-width: 0;
         }
 
-
         .table-title h2 {
-
             font-size: 1.05rem;
-
             font-weight: 600;
-
             color: var(--ink);
-
             margin: 0;
-
             line-height: 1.4;
         }
 
-
-        /*
-         * PARTIE DROITE
-         */
-
         .table-actions {
-
             margin-left: auto;
-
             display: flex;
-
             align-items: center;
-
             justify-content: flex-end;
-
             flex-shrink: 0;
         }
 
-
-        /*
-         * BOUTON PDF
-         */
-
+        /* BOUTON PDF */
         .btn-pdf {
-
             display: inline-flex;
-
             align-items: center;
-
             justify-content: center;
-
             gap: 0.35rem;
-
             text-decoration: none;
-
             border-radius: 6px;
-
             font-weight: 600;
-
             white-space: nowrap;
-
             padding: 0.55rem 1rem;
-
             font-size: 0.9rem;
-
             line-height: 1.2;
-
             background-color: #dc3545;
-
             color: #fff;
-
             border: 1px solid #dc3545;
-
             transition: all 0.2s ease;
         }
 
-
         .btn-pdf:hover {
-
             background-color: #bb2d3b;
-
             border-color: #b02a37;
-
             color: #fff;
-
             text-decoration: none;
         }
 
-
-        /*
-         * BOUTON PDF DÉSACTIVÉ
-         */
-
         .btn-pdf-disabled {
-
             display: inline-flex;
-
             align-items: center;
-
             justify-content: center;
-
             gap: 0.35rem;
-
             border-radius: 6px;
-
             font-weight: 600;
-
             white-space: nowrap;
-
             padding: 0.55rem 1rem;
-
             font-size: 0.9rem;
-
             line-height: 1.2;
-
             background-color: #adb5bd;
-
             color: #fff;
-
             border: 1px solid #adb5bd;
-
             cursor: not-allowed;
-
             opacity: 0.65;
         }
 
-
-        /*
-         * DESCRIPTION
-         */
-
+        /* DESCRIPTION */
         .panel-head > p {
-
             font-size: 0.85rem;
-
             color: var(--muted);
-
             margin: 0.5rem 0 0;
         }
 
-
-        /* =========================
-           TABLEAU
-           ========================= */
-
+        /* TABLEAU */
         table.roster {
-
             width: 100%;
-
             border-collapse: collapse;
-
             font-size: 0.92rem;
         }
 
-
         table.roster thead th {
-
             text-align: left;
-
             font-weight: 500;
-
             font-size: 0.8rem;
-
             color: var(--muted);
-
             padding: 0.7rem 1.5rem;
-
             border-bottom: 1px solid var(--line);
-
             background: #fff;
         }
 
-
         table.roster tbody td {
-
             padding: 0.85rem 1.5rem;
-
             border-bottom: 1px solid var(--line);
-
             vertical-align: middle;
         }
 
-
         table.roster tbody tr:last-child td {
-
             border-bottom: none;
         }
 
-
-        /* =========================
-           MATRICULE / SITE
-           ========================= */
-
         table.roster td.matricule {
-
             font-weight: 600;
-
             color: var(--ink);
         }
 
-
         table.roster td.site {
-
             color: var(--muted);
         }
 
-
-        /* =========================
-           POINTAGE ENTRÉE
-           ========================= */
-
+        /* POINTAGE ENTRÉE */
         table.roster tbody tr.pointage-entree td {
-
             background-color: var(--green-bg);
-
             color: var(--green-text);
         }
 
-
         table.roster tbody tr.pointage-entree:hover td {
-
             background-color: var(--green-hover);
         }
 
-
-        /* =========================
-           POINTAGE SORTIE
-           ========================= */
-
+        /* POINTAGE SORTIE */
         table.roster tbody tr.pointage-sortie td {
-
             background-color: var(--red-bg);
-
             color: var(--red-text);
         }
 
-
         table.roster tbody tr.pointage-sortie:hover td {
-
             background-color: var(--red-hover);
         }
 
-
-        /* =========================
-           TYPE
-           ========================= */
-
+        /* TYPE */
         .type-entree {
-
             font-weight: 600;
-
             color: #2E7D32;
         }
 
-
         .type-sortie {
-
             font-weight: 600;
-
             color: #C62828;
         }
 
+        /* LIGNE TITRE ÉQUIPE */
+        table.roster tbody tr.team-row td {
+            background: var(--ink);
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.02em;
+            padding: 0.6rem 1.5rem;
+        }
 
-        /* =========================
-           ÉTAT VIDE
-           ========================= */
+        .team-count {
+            color: var(--gold);
+            font-weight: 500;
+            margin-left: 0.4rem;
+        }
 
+        /* ÉTAT VIDE */
         .empty-state {
-
             text-align: center;
-
             padding: 3.5rem 1.5rem !important;
-
             color: var(--muted);
         }
 
-
         .empty-state span {
-
             display: block;
-
             font-size: 0.92rem;
         }
 
-
-        /* =========================
-           RESPONSIVE
-           ========================= */
-
+        /* RESPONSIVE */
         @media (max-width: 768px) {
-
             .page-head h1 {
-
                 font-size: 1.6rem;
             }
 
-
-            /*
-             * Sur téléphone :
-             * titre et bouton restent propres
-             */
-
             .table-header {
-
                 align-items: center;
-
                 gap: 0.75rem;
             }
 
-
             .table-title h2 {
-
                 font-size: 0.95rem;
             }
 
-
             .btn-pdf,
             .btn-pdf-disabled {
-
                 padding: 0.5rem 0.7rem;
-
                 font-size: 0.8rem;
             }
 
-
             table.roster {
-
                 font-size: 0.85rem;
             }
 
-
             table.roster thead th,
             table.roster tbody td {
-
                 padding: 0.7rem 1rem;
             }
-
         }
 
-
         @media (max-width: 500px) {
-
-            /*
-             * Petit écran :
-             * le bouton passe sous le titre
-             */
-
             .table-header {
-
                 flex-direction: column;
-
                 align-items: stretch;
             }
 
-
             .table-actions {
-
                 width: 100%;
-
                 margin-left: 0;
             }
 
-
             .btn-pdf,
             .btn-pdf-disabled {
-
                 width: 100%;
             }
-
         }
-
     </style>
-
 </head>
 
 
 <body class="bg-light">
 
-
-<!-- =========================
-     NAVIGATION
-     ========================= -->
-
-<nav
-        th:replace="~{fragments :: nav}">
-</nav>
+<!-- NAVIGATION -->
+<nav th:replace="~{fragments :: nav}"></nav>
 
 
 <div class="container py-4">
 
-
     <!-- =========================
          FORMULAIRE DE RECHERCHE
          ========================= -->
-
-    <form
-            class="panel search-panel mb-4"
-            method="get"
-            th:action="@{/home}">
-
+    <form class="panel search-panel mb-4" method="get" th:action="@{/home}">
 
         <!-- TÉLÉPHONE -->
-
         <div class="field">
-
-            <label for="telephone">
-                Téléphone
-            </label>
-
-            <input
-                    type="text"
-                    id="telephone"
-                    name="telephone"
-                    class="form-control"
-                    placeholder="Ex : 0341234567"
-                    th:value="${telephone}">
-
+            <label for="telephone">Téléphone</label>
+            <input type="text"
+                   id="telephone"
+                   name="telephone"
+                   class="form-control"
+                   placeholder="Ex : 0341234567"
+                   th:value="${telephone}">
         </div>
 
+        <!-- ÉQUIPE -->
+        <div class="field">
+            <label for="equipe">Équipe</label>
+            <select id="equipe" name="equipe" class="form-select">
+                <option value="">Toutes les équipes</option>
+                <option th:each="e : ${equipes}"
+                        th:value="${e}"
+                        th:text="${e}"
+                        th:selected="${e == equipe}">
+                </option>
+            </select>
+        </div>
 
         <!-- DATE DEBUT -->
-
         <div class="field">
-
-            <label for="dateDebut">
-                Du
-            </label>
-
-            <input
-                    type="date"
-                    id="dateDebut"
-                    name="dateDebut"
-                    class="form-control"
-                    th:value="${dateDebut}">
-
+            <label for="dateDebut">Du</label>
+            <input type="date"
+                   id="dateDebut"
+                   name="dateDebut"
+                   class="form-control"
+                   th:value="${dateDebut}">
         </div>
-
 
         <!-- DATE FIN -->
-
         <div class="field">
-
-            <label for="dateFin">
-                Au
-            </label>
-
-            <input
-                    type="date"
-                    id="dateFin"
-                    name="dateFin"
-                    class="form-control"
-                    th:value="${dateFin}">
-
+            <label for="dateFin">Au</label>
+            <input type="date"
+                   id="dateFin"
+                   name="dateFin"
+                   class="form-control"
+                   th:value="${dateFin}">
         </div>
 
-
         <!-- BOUTON RECHERCHER -->
-
-        <button
-                type="submit"
-                class="btn btn-dark">
-
-            Rechercher
-
-        </button>
-
+        <button type="submit" class="btn btn-dark">Rechercher</button>
 
         <!-- BOUTON RESET -->
-
-        <a
-                th:href="@{/home}"
-                class="btn btn-outline-secondary">
-
-            Réinitialiser
-
-        </a>
+        <a th:href="@{/home}" class="btn btn-outline-secondary">Réinitialiser</a>
 
     </form>
 
@@ -706,316 +436,182 @@
     <!-- =========================
          TABLEAU DES POINTAGES
          ========================= -->
-
     <div class="panel">
-
-
-        <!-- =========================
-             EN-TÊTE DU TABLEAU
-             ========================= -->
 
         <div class="panel-head">
 
-
-            <!--
-                TITRE + BOUTON PDF
-            -->
-
             <div class="table-header">
 
-
-                <!-- =========================
-                     TITRE À GAUCHE
-                     ========================= -->
-
+                <!-- TITRE À GAUCHE -->
                 <div class="table-title">
 
-
-                    <!-- TITRE PAR DÉFAUT -->
-
-                    <h2
-                            th:if="${rechercheActive != true}">
-
+                    <h2 th:if="${rechercheActive != true}">
                         Pointage du jour
-
                     </h2>
 
-
-                    <!-- TITRE APRÈS RECHERCHE -->
-
-                    <h2
-                            th:if="${rechercheActive == true}">
-
+                    <h2 th:if="${rechercheActive == true}">
                         Pointages du
-
-                        <span
-                                th:text="${dateDebut}">
-                        </span>
-
+                        <span th:text="${dateDebut}"></span>
                         au
-
-                        <span
-                                th:text="${dateFin}">
-                        </span>
-
+                        <span th:text="${dateFin}"></span>
                     </h2>
 
                 </div>
 
-
-                <!-- =========================
-                     BOUTON PDF À DROITE
-                     ========================= -->
-
+                <!-- BOUTON PDF À DROITE -->
                 <div class="table-actions">
 
-
-                    <!--
-                        BOUTON ACTIF
-                        UNIQUEMENT S'IL Y A DES LIGNES
-                    -->
-
-                    <a
-                            th:if="${rows != null and !#lists.isEmpty(rows)}"
-
-                            th:href="@{/home/pdf(
-                                dateDebut=${dateDebut},
-                                dateFin=${dateFin},
-                                telephone=${telephone}
-                            )}"
-
-                            class="btn-pdf">
-
+                    <!-- ACTIF UNIQUEMENT S'IL Y A DES LIGNES -->
+                    <a th:if="${rows != null and !#lists.isEmpty(rows)}"
+                       th:href="@{/home/pdf(
+                           dateDebut=${dateDebut},
+                           dateFin=${dateFin},
+                           telephone=${telephone},
+                           equipe=${equipe}
+                       )}"
+                       class="btn-pdf">
                         📄
-
-                        <span>
-                            Exporter en PDF
-                        </span>
-
+                        <span>Exporter en PDF</span>
                     </a>
 
-
-                    <!--
-                        BOUTON DÉSACTIVÉ
-                        SI AUCUNE LIGNE
-                    -->
-
-                    <span
-                            th:if="${rows == null or #lists.isEmpty(rows)}"
-
-                            class="btn-pdf-disabled">
-
+                    <!-- DÉSACTIVÉ SI AUCUNE LIGNE -->
+                    <span th:if="${rows == null or #lists.isEmpty(rows)}"
+                          class="btn-pdf-disabled">
                         📄
-
-                        <span>
-                            Exporter en PDF
-                        </span>
-
+                        <span>Exporter en PDF</span>
                     </span>
 
                 </div>
 
             </div>
 
-
-            <!-- =========================
-                 DESCRIPTION
-                 ========================= -->
-
-
             <!-- DESCRIPTION JOUR -->
-
-            <p
-                    th:if="${rechercheActive != true}">
-
+            <p th:if="${rechercheActive != true}">
                 Suivi des entrées et sorties enregistrées aujourd'hui.
-
             </p>
 
-
             <!-- DESCRIPTION RECHERCHE -->
-
-            <p
-                    th:if="${rechercheActive == true}">
-
+            <p th:if="${rechercheActive == true}">
                 Suivi des entrées et sorties enregistrées sur la période sélectionnée.
+            </p>
 
+            <!-- ÉQUIPE FILTRÉE -->
+            <p th:if="${equipe != null and equipe != ''}">
+                Équipe : <strong th:text="${equipe}"></strong>
+
+                <th:block th:if="${rows != null and !#lists.isEmpty(rows)}"
+                        th:with="chefs=${#lists.toList(new java.util.LinkedHashSet(rows.?[roleEquipe == 'CHEF'].![nomAgent]))}">
+                    <span th:if="${!#lists.isEmpty(chefs)}">
+                        dirigée par : <strong th:text="${#strings.listJoin(chefs, ', ')}"></strong>
+                    </span>
+                </th:block>
             </p>
 
         </div>
 
 
-        <!-- =========================
-             TABLE
-             ========================= -->
-
+        <!-- TABLE -->
         <div class="table-responsive">
-
 
             <table class="roster">
 
-
-                <!-- =========================
-                     EN-TÊTE
-                     ========================= -->
-
                 <thead>
-
                 <tr>
-
-                    <th>
-                        Téléphone
-                    </th>
-
-                    <th>
-                        Agent
-                    </th>
-
-                    <th>
-                        Site / Lieu
-                    </th>
-
-                    <th>
-                        Date
-                    </th>
-
-                    <th>
-                        Heure
-                    </th>
-
-                    <th>
-                        Type
-                    </th>
-
+                    <th>Téléphone</th>
+                    <th>Agent</th>
+                    <th>Équipe</th>
+                    <th>Affectation</th>
+                    <th>Site / Lieu</th>
+                    <th>Statut</th>
+                    <th>Date</th>
+                    <th>Heure</th>
+                    <th>Type</th>
                 </tr>
-
                 </thead>
-
-
-                <!-- =========================
-                     CORPS
-                     ========================= -->
 
                 <tbody>
 
+                <!-- Un bloc par équipe -->
+                <th:block th:each="g : ${groupes}">
 
-                <!--
-                    Entrée = ligne verte
-                    Sortie = ligne rouge
-                -->
+                    <!-- Titre de l'équipe -->
+                    <tr class="team-row">
+                        <td colspan="9">
+                            <span th:text="${g.key}"></span>
+                            <span class="team-count"
+                                th:text="'(' + ${#lists.size(g.value)} + ' pointage(s))'"></span>
 
-                <tr
-                        th:each="p : ${rows}"
+                            <th:block th:if="${(equipe == null or equipe == '') and g.value != null and !#lists.isEmpty(g.value)}"
+                                    th:with="chefs=${#lists.toList(new java.util.LinkedHashSet(g.value.?[roleEquipe == 'CHEF'].![nomAgent]))}">
+                                <span th:if="${!#lists.isEmpty(chefs)}">
+                                    — dirigée par : <span th:text="${#strings.listJoin(chefs, ', ')}"></span>
+                                </span>
+                            </th:block>
+                        </td>
+                    </tr>
 
-                        th:classappend="${p.type == 'Entrée'}
-                            ? 'pointage-entree'
-                            : 'pointage-sortie'">
+                    <!-- Entrée = ligne verte / Sortie = ligne rouge -->
+                    <tr th:each="p : ${g.value}"
+                        th:classappend="${p.type == 'Entrée'} ? 'pointage-entree' : 'pointage-sortie'">
 
+                        <td th:text="${p.telephone}"></td>
 
-                    <!-- =========================
-                         TÉLÉPHONE
-                         ========================= -->
+                        <td th:text="${p.agent}"></td>
 
-                    <td
-                            th:text="${p.telephone}">
+                        <td th:text="${p.equipe}"></td>
 
+                        <td class="site affectation" th:title="${p.lieuAffectation}">
+                            <div class="affect-cell"
+                                 th:if="${p.lieuAffectation != null and p.lieuAffectation != ''}">
+
+                                <span class="affect-first"
+                                      th:text="${#strings.arraySplit(p.lieuAffectation, ',')[0]}"></span>
+
+                                <button type="button"
+                                        class="affect-toggle badge bg-secondary"
+                                        th:if="${#strings.arraySplit(p.lieuAffectation, ',').length > 1}"
+                                        th:attr="data-count=${#strings.arraySplit(p.lieuAffectation, ',').length - 1}"
+                                        th:text="'+' + (${#strings.arraySplit(p.lieuAffectation, ',').length} - 1)"
+                                        onclick="toggleAffectation(this)">
+                                </button>
+
+                                <div class="affect-full d-none"
+                                     th:text="${p.lieuAffectation}"></div>
+
+                            </div>
+
+                            <span class="text-muted"
+                                  th:if="${p.lieuAffectation == null or p.lieuAffectation == ''}">—</span>
+                        </td>
+
+                        <td class="site" th:text="${p.site}"></td>
+
+                        <td>
+                            <span th:if="${p.typeLieu == 'ok'}" class="badge bg-success">OK</span>
+                            <span th:if="${p.typeLieu == 'intrus'}" class="badge bg-danger">Intrus</span>
+                        </td>
+
+                        <td>
+                            <span th:if="${p.date != null and p.date != ''}"
+                                  th:text="${p.date}"></span>
+                            <span th:if="${p.date == null or p.date == ''}">-</span>
+                        </td>
+
+                        <td th:text="${p.heure}"></td>
+
+                        <td th:classappend="${p.type == 'Entrée'} ? 'type-entree' : 'type-sortie'"
+                            th:text="${p.type}"></td>
+
+                    </tr>
+
+                </th:block>
+
+                <!-- AUCUN RÉSULTAT -->
+                <tr th:if="${rows == null or #lists.isEmpty(rows)}">
+                    <td colspan="9" class="empty-state">
+                        <span>Aucun pointage sur cette période.</span>
                     </td>
-
-
-                    <!-- =========================
-                         AGENT
-                         ========================= -->
-
-                    <td
-                            th:text="${p.agent}">
-
-                    </td>
-
-
-                    <!-- =========================
-                         SITE
-                         ========================= -->
-
-                    <td
-                            class="site"
-
-                            th:text="${p.site}">
-
-                    </td>
-
-
-                    <!-- =========================
-                         DATE
-                         ========================= -->
-
-                    <td>
-
-                        <span
-                                th:if="${p.date != null}"
-
-                                th:text="${#dates.format(p.date, 'dd/MM/yyyy')}">
-
-                        </span>
-
-                        <span
-                                th:if="${p.date == null}">
-
-                            -
-
-                        </span>
-
-                    </td>
-
-
-                    <!-- =========================
-                         HEURE
-                         ========================= -->
-
-                    <td
-                            th:text="${p.heure}">
-
-                    </td>
-
-
-                    <!-- =========================
-                         TYPE
-                         ========================= -->
-
-                    <td
-                            th:classappend="${p.type == 'Entrée'}
-                                ? 'type-entree'
-                                : 'type-sortie'"
-
-                            th:text="${p.type}">
-
-                    </td>
-
-
                 </tr>
-
-
-                <!-- =========================
-                     AUCUN RÉSULTAT
-                     ========================= -->
-
-                <tr
-                        th:if="${rows == null or #lists.isEmpty(rows)}">
-
-
-                    <td
-                            colspan="6"
-                            class="empty-state">
-
-                        <span>
-
-                            Aucun pointage sur cette période.
-
-                        </span>
-
-                    </td>
-
-                </tr>
-
 
                 </tbody>
 
@@ -1028,15 +624,28 @@
 </div>
 
 
-<!-- =========================
-     BOOTSTRAP JS
-     ========================= -->
+<!-- BOOTSTRAP JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
-<script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
+<!-- TOGGLE AFFECTATION -->
+<script>
+    function toggleAffectation(btn) {
+        const cell = btn.closest('.affect-cell');
+        const full = cell.querySelector('.affect-full');
+        const first = cell.querySelector('.affect-first');
+        const isExpanded = !full.classList.contains('d-none');
+
+        if (isExpanded) {
+            full.classList.add('d-none');
+            first.classList.remove('d-none');
+            btn.textContent = '+' + btn.dataset.count;
+        } else {
+            full.classList.remove('d-none');
+            first.classList.add('d-none');
+            btn.textContent = '−';
+        }
+    }
 </script>
 
-
 </body>
-
 </html>

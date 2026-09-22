@@ -226,6 +226,9 @@
         }
       },
       "runtimes": {
+        "android-arm": {
+          "#import": []
+        },
         "android-arm64": {
           "#import": []
         },

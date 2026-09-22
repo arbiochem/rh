@@ -17,6 +17,31 @@ CREATE TABLE IF NOT EXISTS agents
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Schéma pour la gestion d'équipe (SQLite / Turso)
+-- À exécuter une seule fois sur ta base Turso (via tursodb, le shell, ou au démarrage de l'appli)
+
+CREATE TABLE IF NOT EXISTS equipes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nom TEXT NOT NULL UNIQUE,
+    description TEXT,
+    date_creation TEXT NOT NULL DEFAULT (datetime('now')),
+    actif INTEGER NOT NULL DEFAULT 1
+);
+
+-- Table de liaison utilisateur <-> équipe (plusieurs membres par équipe)
+CREATE TABLE IF NOT EXISTS membres_equipe (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    equipe_id INTEGER NOT NULL,
+    utilisateur_id INTEGER NOT NULL,
+    role_equipe TEXT NOT NULL DEFAULT 'MEMBRE', -- 'CHEF' ou 'MEMBRE'
+    date_ajout TEXT NOT NULL DEFAULT (datetime('now')),
+    FOREIGN KEY (equipe_id) REFERENCES equipes(id) ON DELETE CASCADE,
+    UNIQUE (equipe_id, utilisateur_id) -- un utilisateur ne peut être ajouté qu'une fois par équipe
+);
+
+CREATE INDEX IF NOT EXISTS idx_membres_equipe_id ON membres_equipe(equipe_id);
+CREATE INDEX IF NOT EXISTS idx_membres_utilisateur_id ON membres_equipe(utilisateur_id);
+
 
 CREATE TABLE IF NOT EXISTS affectations
 (

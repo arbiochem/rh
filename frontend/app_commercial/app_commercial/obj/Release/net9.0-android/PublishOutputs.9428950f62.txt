@@ -1,0 +1,4 @@
+D:\Arbiochem\Travail\Projets\rh\frontend\app_commercial\app_commercial\bin\Release\net9.0-android\publish\com.companyname.app_commercial-Signed.aab
+D:\Arbiochem\Travail\Projets\rh\frontend\app_commercial\app_commercial\bin\Release\net9.0-android\publish\com.companyname.app_commercial.aab
+D:\Arbiochem\Travail\Projets\rh\frontend\app_commercial\app_commercial\bin\Release\net9.0-android\publish\com.companyname.app_commercial-Signed.apk
+D:\Arbiochem\Travail\Projets\rh\frontend\app_commercial\app_commercial\bin\Release\net9.0-android\publish\_Microsoft.Android.Resource.Designer.dll

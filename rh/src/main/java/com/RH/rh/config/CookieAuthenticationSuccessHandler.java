@@ -42,6 +42,8 @@ public class CookieAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         response.addCookie(cookie);
 
+        response.sendRedirect("/home");
+
         // Poursuit le comportement standard : redirection vers defaultTargetUrl
         super.onAuthenticationSuccess(request, response, authentication);
     }

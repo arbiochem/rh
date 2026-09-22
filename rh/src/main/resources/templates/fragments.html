@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="fr"
       xmlns:th="http://www.thymeleaf.org">
 
@@ -16,16 +17,20 @@
 
             font-family: 'Inter', sans-serif;
             background: var(--terracotta);
-            box-shadow: 0 2px 10px -4px rgba(43, 36, 32, 0.35);
+
+            box-shadow:
+                0 2px 10px -4px rgba(43, 36, 32, 0.35);
         }
 
         .rh-nav .nav-inner {
             max-width: 1000px;
             margin: 0 auto;
             padding: 0 1.5rem;
+
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             gap: 1rem;
             min-height: 3.6rem;
         }
@@ -34,33 +39,46 @@
             font-family: 'Fraunces', serif;
             font-weight: 600;
             font-size: 1.15rem;
+
             color: var(--ivory);
             text-decoration: none;
+
             letter-spacing: 0.01em;
         }
 
         .rh-nav .nav-toggle {
             display: none;
+
             background: transparent;
             border: 1px solid var(--line);
             border-radius: 6px;
+
             width: 2.2rem;
             height: 2.2rem;
+
             align-items: center;
             justify-content: center;
+
             cursor: pointer;
         }
 
         .rh-nav .nav-toggle span,
         .rh-nav .nav-toggle span::before,
         .rh-nav .nav-toggle span::after {
+
             content: "";
+
             display: block;
+
             width: 1.1rem;
             height: 2px;
+
             background: var(--ivory);
+
             position: relative;
-            transition: transform 0.15s ease;
+
+            transition:
+                transform 0.15s ease;
         }
 
         .rh-nav .nav-toggle span::before {
@@ -74,192 +92,428 @@
         }
 
         .rh-nav .nav-collapse {
+
             display: flex;
             align-items: center;
+
             gap: 1.75rem;
+
             flex: 1;
+
             justify-content: space-between;
         }
 
         .rh-nav .nav-links {
+
             list-style: none;
+
             display: flex;
+
             gap: 0.25rem;
+
             margin: 0;
             padding: 0;
         }
 
         .rh-nav .nav-links a {
+
             display: inline-block;
+
             padding: 0.55rem 0.85rem;
+
             border-radius: 6px;
+
             color: rgba(247, 242, 231, 0.85);
+
             text-decoration: none;
+
             font-size: 0.92rem;
             font-weight: 500;
-            transition: background 0.15s ease, color 0.15s ease;
+
+            transition:
+                background 0.15s ease,
+                color 0.15s ease;
         }
 
         .rh-nav .nav-links a:hover {
-            background: rgba(247, 242, 231, 0.12);
-            color: var(--ivory);
+
+            background:
+                rgba(247, 242, 231, 0.12);
+
+            color:
+                var(--ivory);
         }
 
         .rh-nav .nav-links a.active {
-            background: rgba(247, 242, 231, 0.16);
-            color: var(--ivory);
+
+            background:
+                rgba(247, 242, 231, 0.16);
+
+            color:
+                var(--ivory);
+        }
+
+        /* =====================================================
+           LIENS DÉSACTIVÉS
+           ===================================================== */
+
+        .rh-nav .nav-links a.disabled {
+
+            color:
+                rgba(247, 242, 231, 0.40);
+
+            background:
+                transparent;
+
+            cursor:
+                not-allowed;
+
+            opacity:
+                0.65;
+
+            pointer-events:
+                none;
         }
 
         .rh-nav .user-name {
+
             font-size: 0.86rem;
-            color: rgba(247, 242, 231, 0.75);
-            white-space: nowrap;
+
+            color:
+                rgba(247, 242, 231, 0.75);
+
+            white-space:
+                nowrap;
         }
 
         .rh-nav .user-name strong {
-            color: var(--ivory);
-            font-weight: 600;
+
+            color:
+                var(--ivory);
+
+            font-weight:
+                600;
         }
 
         .rh-nav .nav-right {
+
             display: flex;
+
             align-items: center;
+
             gap: 0.9rem;
         }
 
         .rh-nav .logout-btn {
+
             font-family: inherit;
+
             font-size: 0.86rem;
             font-weight: 600;
-            padding: 0.5rem 1.1rem;
-            border-radius: 6px;
-            border: 1px solid var(--line);
-            background: transparent;
-            color: var(--ivory);
-            cursor: pointer;
-            transition: background 0.15s ease, border-color 0.15s ease;
+
+            padding:
+                0.5rem 1.1rem;
+
+            border-radius:
+                6px;
+
+            border:
+                1px solid var(--line);
+
+            background:
+                transparent;
+
+            color:
+                var(--ivory);
+
+            cursor:
+                pointer;
+
+            transition:
+                background 0.15s ease,
+                border-color 0.15s ease;
         }
 
         .rh-nav .logout-btn:hover {
-            background: rgba(247, 242, 231, 0.12);
-            border-color: rgba(247, 242, 231, 0.4);
+
+            background:
+                rgba(247, 242, 231, 0.12);
+
+            border-color:
+                rgba(247, 242, 231, 0.4);
         }
 
         .rh-nav :focus-visible {
-            outline: 2px solid var(--ivory);
-            outline-offset: 2px;
+
+            outline:
+                2px solid var(--ivory);
+
+            outline-offset:
+                2px;
         }
+
+        /* =====================================================
+           MOBILE
+           ===================================================== */
 
         @media (max-width: 720px) {
 
             .rh-nav .nav-toggle {
+
                 display: inline-flex;
             }
 
             .rh-nav .nav-collapse {
+
                 position: absolute;
+
                 top: 3.6rem;
+
                 left: 0;
                 right: 0;
-                background: var(--terracotta-deep);
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0;
-                padding: 0.5rem 1rem 1rem;
-                display: none;
+
+                background:
+                    var(--terracotta-deep);
+
+                flex-direction:
+                    column;
+
+                align-items:
+                    stretch;
+
+                gap:
+                    0;
+
+                padding:
+                    0.5rem 1rem 1rem;
+
+                display:
+                    none;
             }
 
             .rh-nav .nav-collapse.open {
-                display: flex;
+
+                display:
+                    flex;
             }
 
             .rh-nav .nav-links {
-                flex-direction: column;
-                gap: 0.15rem;
+
+                flex-direction:
+                    column;
+
+                gap:
+                    0.15rem;
             }
 
             .rh-nav .nav-links a {
-                width: 100%;
+
+                width:
+                    100%;
             }
 
             .rh-nav .nav-right {
-                margin-top: 0.75rem;
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0.6rem;
+
+                margin-top:
+                    0.75rem;
+
+                flex-direction:
+                    column;
+
+                align-items:
+                    stretch;
+
+                gap:
+                    0.6rem;
             }
 
             .rh-nav .user-name {
-                padding: 0 0.1rem;
+
+                padding:
+                    0 0.1rem;
             }
 
             .rh-nav .logout-btn {
-                width: 100%;
-            }
 
+                width:
+                    100%;
+            }
         }
 
     </style>
 
+
     <div class="nav-inner">
+
+
+        <!-- =================================================
+             BOUTON MOBILE
+             ================================================= -->
+
         <button
                 type="button"
                 class="nav-toggle"
+
                 aria-label="Ouvrir le menu"
+
                 aria-expanded="false"
-                onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') !== 'true'); this.parentElement.querySelector('.nav-collapse').classList.toggle('open');">
+
+                onclick="
+                    this.setAttribute(
+                        'aria-expanded',
+                        this.getAttribute('aria-expanded') !== 'true'
+                    );
+
+                    this.parentElement
+                        .querySelector('.nav-collapse')
+                        .classList.toggle('open');
+                ">
+
             <span></span>
+
         </button>
+
+
+        <!-- =================================================
+             MENU
+             ================================================= -->
 
         <div class="nav-collapse">
 
+
             <ul class="nav-links">
 
+
+                <!-- ===============================
+                     ACCUEIL
+                     =============================== -->
+
                 <li>
+
                     <a th:href="@{/}">
+
                         Accueil
+
                     </a>
+
                 </li>
 
+
+                <!-- ===============================
+                     AGENTS
+                     =============================== -->
+
                 <li>
-                    <a th:href="@{/agents}">
+
+                    <a th:href="@{/agents}"
+                       th:classappend="${#authentication.name != 'admin'} ? ' disabled' : ''"
+                       th:attr="aria-disabled=${#authentication.name != 'admin'}">
+
                         Agents
+
                     </a>
+
                 </li>
 
+
+                <!-- ===============================
+                     EQUIPES
+                     =============================== -->
+
                 <li>
-                    <a th:href="@{/affectations}">
-                        Affectations
+
+                    <a th:href="@{/admin/equipes}"
+                       th:classappend="${#authentication.name != 'admin'} ? ' disabled' : ''"
+                       th:attr="aria-disabled=${#authentication.name != 'admin'}">
+
+                        Equipes
+
                     </a>
+
                 </li>
+
+                <!-- ===============================
+                     UTILISATEURS
+                     =============================== -->
+
+                <li>
+
+                    <a th:href="@{/admin/utilisateurs}"
+                       th:classappend="${#authentication.name != 'admin'} ? ' disabled' : ''"
+                       th:attr="aria-disabled=${#authentication.name != 'admin'}">
+
+                        Utilisateurs
+
+                    </a>
+
+                </li>
+
+
+                <!-- ===============================
+                     AFFECTATIONS
+                     =============================== -->
+
+                <li>
+
+                    <a th:href="@{/affectations}">
+
+                        Affectations
+
+                    </a>
+
+                </li>
+
 
             </ul>
 
+
+            <!-- =================================================
+                 UTILISATEUR + DÉCONNEXION
+                 ================================================= -->
+
             <div class="nav-right">
 
-            <span class="user-name"
-                th:if="${#authentication != null and #authentication.authenticated}">
 
-                Connecté en tant que
+                <span
+                        class="user-name"
 
-                <strong th:text="${#authentication.name}">
-                    Utilisateur
-                </strong>
+                        th:if="${#authentication != null and #authentication.authenticated}">
 
-            </span>
+                    Connecté en tant que
 
-            <form th:action="@{/logout}"
-                method="post"
-                class="logout-form">
+                    <strong
+                            th:text="${#authentication.name}">
 
-                <button type="submit"
-                        class="logout-btn">
-                    Déconnexion
-                </button>
+                        Utilisateur
 
-            </form>
+                    </strong>
+
+                </span>
+
+
+                <form
+                        th:action="@{/logout}"
+
+                        method="post"
+
+                        class="logout-form">
+
+
+                    <button
+                            type="submit"
+
+                            class="logout-btn">
+
+                        Déconnexion
+
+                    </button>
+
+
+                </form>
+
 
             </div>
+
 
         </div>
 
@@ -268,4 +522,5 @@
 </nav>
 
 </body>
+
 </html>

@@ -15,6 +15,7 @@ import com.lowagie.text.pdf.PdfWriter;
 
 import org.springframework.stereotype.Service;
 
+import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 
 import java.text.SimpleDateFormat;
@@ -108,22 +109,25 @@ public class PointagePdfService {
 
 
             // =====================================================
-            // TABLEAU
+            // TABLEAU (9 COLONNES)
             // =====================================================
 
             PdfPTable table =
-                    new PdfPTable(6);
+                    new PdfPTable(9);
 
             table.setWidthPercentage(100);
 
             table.setWidths(
                     new float[]{
-                            15f,
-                            25f,
-                            25f,
-                            12f,
-                            10f,
-                            13f
+                            10f,  // Téléphone
+                            17f,  // Agent
+                            10f,  // Équipe
+                            13f,  // Affectation
+                            13f,  // Site / Lieu
+                            8f,   // Statut
+                            9f,   // Date
+                            8f,   // Heure
+                            8f    // Type
                     }
             );
 
@@ -143,7 +147,10 @@ public class PointagePdfService {
 
                     "Téléphone",
                     "Agent",
+                    "Équipe",
+                    "Affectation",
                     "Site / Lieu",
+                    "Statut",
                     "Date",
                     "Heure",
                     "Type"
@@ -185,30 +192,39 @@ public class PointagePdfService {
                             9
                     );
 
+            Font bodyFontBold =
+                    new Font(
+                            Font.HELVETICA,
+                            9,
+                            Font.BOLD
+                    );
+
 
             if (rows != null && !rows.isEmpty()) {
 
                 for (Pointage p : rows) {
+
+                    boolean estEntree =
+                            "Entrée".equalsIgnoreCase(p.getType());
+
+                    // Couleur de fond de ligne, comme dans le HTML
+                    Color bgColor =
+                            estEntree
+                                    ? new Color(232, 245, 233)  // vert clair
+                                    : new Color(255, 235, 238); // rouge clair
 
 
                     // =================================================
                     // TÉLÉPHONE
                     // =================================================
 
-                    PdfPCell telephoneCell =
-                            new PdfPCell(
-                                    new Phrase(
-                                            valeur(p.getTelephone()),
-                                            bodyFont
-                                    )
-                            );
-
-                    telephoneCell.setVerticalAlignment(
-                            Element.ALIGN_MIDDLE
-                    );
-
                     table.addCell(
-                            telephoneCell
+                            creerCellule(
+                                    valeur(p.getTelephone()),
+                                    bodyFont,
+                                    bgColor,
+                                    Element.ALIGN_LEFT
+                            )
                     );
 
 
@@ -216,20 +232,47 @@ public class PointagePdfService {
                     // AGENT
                     // =================================================
 
-                    PdfPCell agentCell =
-                            new PdfPCell(
-                                    new Phrase(
-                                            valeur(p.getAgent()),
-                                            bodyFont
-                                    )
-                            );
-
-                    agentCell.setVerticalAlignment(
-                            Element.ALIGN_MIDDLE
+                    table.addCell(
+                            creerCellule(
+                                    valeur(p.getAgent()),
+                                    bodyFont,
+                                    bgColor,
+                                    Element.ALIGN_LEFT
+                            )
                     );
 
+
+                    // =================================================
+                    // ÉQUIPE
+                    // =================================================
+
                     table.addCell(
-                            agentCell
+                            creerCellule(
+                                    valeur(p.getEquipe()),
+                                    bodyFont,
+                                    bgColor,
+                                    Element.ALIGN_LEFT
+                            )
+                    );
+
+
+                    // =================================================
+                    // AFFECTATION
+                    // =================================================
+
+                    String affectation =
+                            (p.getLieuAffectation() == null
+                                    || p.getLieuAffectation().isBlank())
+                                    ? "—"
+                                    : p.getLieuAffectation();
+
+                    table.addCell(
+                            creerCellule(
+                                    affectation,
+                                    bodyFont,
+                                    bgColor,
+                                    Element.ALIGN_LEFT
+                            )
                     );
 
 
@@ -237,20 +280,53 @@ public class PointagePdfService {
                     // SITE
                     // =================================================
 
-                    PdfPCell siteCell =
-                            new PdfPCell(
-                                    new Phrase(
-                                            valeur(p.getSite()),
-                                            bodyFont
-                                    )
-                            );
-
-                    siteCell.setVerticalAlignment(
-                            Element.ALIGN_MIDDLE
+                    table.addCell(
+                            creerCellule(
+                                    valeur(p.getSite()),
+                                    bodyFont,
+                                    bgColor,
+                                    Element.ALIGN_LEFT
+                            )
                     );
 
+
+                    // =================================================
+                    // STATUT (OK / Intrus)
+                    // =================================================
+
+                    String statutTexte;
+                    Font statutFont;
+
+                    if ("ok".equalsIgnoreCase(p.getTypeLieu())) {
+                        statutTexte = "OK";
+                        statutFont =
+                                new Font(
+                                        Font.HELVETICA,
+                                        9,
+                                        Font.BOLD,
+                                        new Color(27, 94, 32)
+                                );
+                    } else if ("intrus".equalsIgnoreCase(p.getTypeLieu())) {
+                        statutTexte = "Intrus";
+                        statutFont =
+                                new Font(
+                                        Font.HELVETICA,
+                                        9,
+                                        Font.BOLD,
+                                        new Color(183, 28, 28)
+                                );
+                    } else {
+                        statutTexte = "";
+                        statutFont = bodyFont;
+                    }
+
                     table.addCell(
-                            siteCell
+                            creerCellule(
+                                    statutTexte,
+                                    statutFont,
+                                    bgColor,
+                                    Element.ALIGN_CENTER
+                            )
                     );
 
 
@@ -263,24 +339,13 @@ public class PointagePdfService {
                                     p.getDate()
                             );
 
-                    PdfPCell dateCell =
-                            new PdfPCell(
-                                    new Phrase(
-                                            date,
-                                            bodyFont
-                                    )
-                            );
-
-                    dateCell.setHorizontalAlignment(
-                            Element.ALIGN_CENTER
-                    );
-
-                    dateCell.setVerticalAlignment(
-                            Element.ALIGN_MIDDLE
-                    );
-
                     table.addCell(
-                            dateCell
+                            creerCellule(
+                                    date,
+                                    bodyFont,
+                                    bgColor,
+                                    Element.ALIGN_CENTER
+                            )
                     );
 
 
@@ -288,24 +353,13 @@ public class PointagePdfService {
                     // HEURE
                     // =================================================
 
-                    PdfPCell heureCell =
-                            new PdfPCell(
-                                    new Phrase(
-                                            valeur(p.getHeure()),
-                                            bodyFont
-                                    )
-                            );
-
-                    heureCell.setHorizontalAlignment(
-                            Element.ALIGN_CENTER
-                    );
-
-                    heureCell.setVerticalAlignment(
-                            Element.ALIGN_MIDDLE
-                    );
-
                     table.addCell(
-                            heureCell
+                            creerCellule(
+                                    valeur(p.getHeure()),
+                                    bodyFont,
+                                    bgColor,
+                                    Element.ALIGN_CENTER
+                            )
                     );
 
 
@@ -313,24 +367,13 @@ public class PointagePdfService {
                     // TYPE
                     // =================================================
 
-                    PdfPCell typeCell =
-                            new PdfPCell(
-                                    new Phrase(
-                                            valeur(p.getType()),
-                                            bodyFont
-                                    )
-                            );
-
-                    typeCell.setHorizontalAlignment(
-                            Element.ALIGN_CENTER
-                    );
-
-                    typeCell.setVerticalAlignment(
-                            Element.ALIGN_MIDDLE
-                    );
-
                     table.addCell(
-                            typeCell
+                            creerCellule(
+                                    valeur(p.getType()),
+                                    bodyFontBold,
+                                    bgColor,
+                                    Element.ALIGN_CENTER
+                            )
                     );
                 }
 
@@ -348,7 +391,7 @@ public class PointagePdfService {
                                 )
                         );
 
-                emptyCell.setColspan(6);
+                emptyCell.setColspan(9);
 
                 emptyCell.setHorizontalAlignment(
                         Element.ALIGN_CENTER
@@ -408,6 +451,37 @@ public class PointagePdfService {
         }
 
         return outputStream.toByteArray();
+    }
+
+
+    // =============================================================
+    // CRÉATION D'UNE CELLULE STYLISÉE
+    // =============================================================
+
+    private PdfPCell creerCellule(
+            String texte,
+            Font font,
+            Color backgroundColor,
+            int alignement
+    ) {
+
+        PdfPCell cell =
+                new PdfPCell(
+                        new Phrase(
+                                texte,
+                                font
+                        )
+                );
+
+        cell.setHorizontalAlignment(alignement);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setPadding(5);
+
+        if (backgroundColor != null) {
+            cell.setBackgroundColor(backgroundColor);
+        }
+
+        return cell;
     }
 
 
