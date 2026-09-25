@@ -35,15 +35,15 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center"
                         th:each="membre : ${membres}">
                         <div>
-                            <div th:text="${membre.nomUtilisateur}">Nom</div>
-                            <small class="text-muted" th:text="${membre.emailUtilisateur}">email@exemple.mg</small>
+                            <div th:text="${membre.nomAgent + ' ' + membre.prenomAgent}">Nom</div>
+                            <small class="text-muted" th:text="${membre.emailAgent}">email@exemple.mg</small>
                         </div>
                         <div class="d-flex align-items-center gap-2">
                             <span class="badge"
                                   th:classappend="${membre.roleEquipe.name() == 'CHEF'} ? 'badge-chef text-white' : 'bg-light text-dark'"
                                   th:text="${membre.roleEquipe}">MEMBRE</span>
 
-                            <form th:action="@{/admin/equipes/{id}/membres/{userId}/role(id=${equipe.id}, userId=${membre.utilisateurId})}"
+                            <form th:action="@{/admin/equipes/{id}/membres/{userId}/role(id=${equipe.id}, userId=${membre.agentId})}"
                                   method="post" class="d-inline">
                                 <input type="hidden" name="role"
                                        th:value="${membre.roleEquipe.name() == 'CHEF'} ? 'MEMBRE' : 'CHEF'">
@@ -52,7 +52,7 @@
                                 </button>
                             </form>
 
-                            <form th:action="@{/admin/equipes/{id}/membres/{userId}/retirer(id=${equipe.id}, userId=${membre.utilisateurId})}"
+                            <form th:action="@{/admin/equipes/{id}/membres/{userId}/retirer(id=${equipe.id}, userId=${membre.agentId})}"
                                   method="post" onsubmit="return confirm('Retirer ce membre de l\'équipe ?');">
                                 <button type="submit" class="btn btn-sm btn-outline-danger">✕</button>
                             </form>

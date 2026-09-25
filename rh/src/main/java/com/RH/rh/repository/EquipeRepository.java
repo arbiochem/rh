@@ -51,20 +51,20 @@ public class EquipeRepository {
 
     public Equipe save(Equipe equipe) {
 
-        jdbc.execute(
+        // SQL Server : OUTPUT INSERTED.id renvoie l'id généré dans la même
+        // requête (SCOPE_IDENTITY() dépendrait de la connexion du pool).
+        Long newId = jdbc.queryForObject(
             """
-            INSERT INTO equipes (nom, description, date_creation, actif) VALUES (?, ?, ?, 1)
+            INSERT INTO equipes (nom, description, date_creation, actif)
+            OUTPUT INSERTED.id
+            VALUES (?, ?, ?, 1)
             """,
-            (PreparedStatement ps) -> {
-                ps.setString(1, equipe.getNom());
-                ps.setString(2, equipe.getDescription());
-                ps.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
-                return ps.execute();
-            }
+            Long.class,
+            equipe.getNom(),
+            equipe.getDescription(),
+            Timestamp.valueOf(LocalDateTime.now())
         );
 
-        // ps.execute() ne renvoie pas d'id généré : on le récupère explicitement
-        Long newId = jdbc.queryForObject("SELECT last_insert_rowid()", Long.class);
         equipe.setId(newId);
 
         return equipe;

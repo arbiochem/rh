@@ -15,7 +15,10 @@ public class DataSourceAutoCommitFixPostProcessor
             Object bean,
             String beanName) throws BeansException {
 
-        if (bean instanceof DataSource
+        // Le contournement auto-commit ne concerne que le pilote libSQL
+        // (Turso). SQL Server doit garder de vraies transactions.
+        if ("tursoDataSource".equals(beanName)
+                && bean instanceof DataSource
                 && !(bean instanceof AutoCommitSafeDataSource)) {
 
             System.out.println(

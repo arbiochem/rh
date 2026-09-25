@@ -3,7 +3,7 @@ package com.RH.rh.model;
 import java.time.LocalDateTime;
 
 /**
- * Représente l'appartenance d'un utilisateur à une équipe.
+ * Représente l'appartenance d'un agent à une équipe.
  */
 public class MembreEquipe {
 
@@ -13,21 +13,35 @@ public class MembreEquipe {
     }
 
     private Long id;
+
     private Long equipeId;
-    private Long utilisateurId;
+
+    private Long agentId;
+
     private RoleEquipe roleEquipe = RoleEquipe.MEMBRE;
+
     private LocalDateTime dateAjout;
 
-    // Champs enrichis pour l'affichage (jointure avec la table utilisateurs)
-    private String nomUtilisateur;
-    private String emailUtilisateur;
+    // Champs enrichis pour l'affichage
+    // provenant de la table agents
+    private String nomAgent;
+
+    private String prenomAgent;
+
+    private String emailAgent;
+
+    private String telephoneAgent;
 
     public MembreEquipe() {
     }
 
-    public MembreEquipe(Long equipeId, Long utilisateurId, RoleEquipe roleEquipe) {
+    public MembreEquipe(
+            Long equipeId,
+            Long agentId,
+            RoleEquipe roleEquipe) {
+
         this.equipeId = equipeId;
-        this.utilisateurId = utilisateurId;
+        this.agentId = agentId;
         this.roleEquipe = roleEquipe;
     }
 
@@ -47,12 +61,12 @@ public class MembreEquipe {
         this.equipeId = equipeId;
     }
 
-    public Long getUtilisateurId() {
-        return utilisateurId;
+    public Long getAgentId() {
+        return agentId;
     }
 
-    public void setUtilisateurId(Long utilisateurId) {
-        this.utilisateurId = utilisateurId;
+    public void setAgentId(Long agentId) {
+        this.agentId = agentId;
     }
 
     public RoleEquipe getRoleEquipe() {
@@ -71,19 +85,35 @@ public class MembreEquipe {
         this.dateAjout = dateAjout;
     }
 
-    public String getNomUtilisateur() {
-        return nomUtilisateur;
+    public String getNomAgent() {
+        return nomAgent;
     }
 
-    public void setNomUtilisateur(String nomUtilisateur) {
-        this.nomUtilisateur = nomUtilisateur;
+    public void setNomAgent(String nomAgent) {
+        this.nomAgent = nomAgent;
     }
 
-    public String getEmailUtilisateur() {
-        return emailUtilisateur;
+    public String getPrenomAgent() {
+        return prenomAgent;
     }
 
-    public void setEmailUtilisateur(String emailUtilisateur) {
-        this.emailUtilisateur = emailUtilisateur;
+    public void setPrenomAgent(String prenomAgent) {
+        this.prenomAgent = prenomAgent;
+    }
+
+    public String getEmailAgent() {
+        return emailAgent;
+    }
+
+    public void setEmailAgent(String emailAgent) {
+        this.emailAgent = emailAgent;
+    }
+
+    public String getTelephoneAgent() {
+        return telephoneAgent;
+    }
+
+    public void setTelephoneAgent(String telephoneAgent) {
+        this.telephoneAgent = telephoneAgent;
     }
 }

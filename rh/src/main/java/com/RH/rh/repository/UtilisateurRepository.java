@@ -2,6 +2,7 @@ package com.RH.rh.repository;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
 
 import com.RH.rh.model.Utilisateur;
@@ -106,9 +107,12 @@ public class UtilisateurRepository {
     }
 
     public Utilisateur save(Utilisateur utilisateur) {
-        jdbc.execute(
+
+        // SQL Server : OUTPUT INSERTED.id renvoie l'id généré dans la même requête.
+        Long newId = jdbc.query(
             """
             INSERT INTO utilisateurs (username, password, role, actif, agent_id, created_at)
+            OUTPUT INSERTED.id
             VALUES (?, ?, ?, 1, ?, ?)
             """,
             (PreparedStatement ps) -> {
@@ -118,14 +122,16 @@ public class UtilisateurRepository {
                 if (utilisateur.getAgentId() != null) {
                     ps.setLong(4, utilisateur.getAgentId());
                 } else {
-                    ps.setNull(4, java.sql.Types.INTEGER);
+                    ps.setNull(4, java.sql.Types.BIGINT);
                 }
                 ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
-                return ps.execute();
+            },
+            (ResultSetExtractor<Long>) rs -> {
+                rs.next();
+                return rs.getLong(1);
             }
         );
 
-        Long newId = jdbc.queryForObject("SELECT last_insert_rowid()", Long.class);
         utilisateur.setId(newId);
         utilisateur.setActif(true);
         return utilisateur;

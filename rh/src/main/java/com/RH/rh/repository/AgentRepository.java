@@ -41,6 +41,40 @@ public class AgentRepository {
     }
 
 
+    /**
+     * Vérifie si un agent avec ce matricule existe déjà.
+     * Utilisé pour bloquer les doublons AVANT l'insertion,
+     * car la traduction DuplicateKeyException n'est pas fiable avec libSQL/Turso.
+     */
+    public boolean existsByMatricule(String matricule) {
+
+        Integer count = jdbcTemplate.queryForObject(
+            "SELECT COUNT(*) FROM agents WHERE matricule = ?",
+            Integer.class,
+            matricule
+        );
+
+        return count != null && count > 0;
+    }
+
+
+    /**
+     * Variante utile pour l'édition : vérifie qu'aucun AUTRE agent
+     * (id différent) ne possède déjà ce matricule.
+     */
+    public boolean existsByMatriculeAndIdNot(String matricule, Long id) {
+
+        Integer count = jdbcTemplate.queryForObject(
+            "SELECT COUNT(*) FROM agents WHERE matricule = ? AND id != ?",
+            Integer.class,
+            matricule,
+            id
+        );
+
+        return count != null && count > 0;
+    }
+
+
     public void save(Agent agent) {
 
         jdbcTemplate.execute(
@@ -154,7 +188,7 @@ public class AgentRepository {
             params.add(like);
         }
 
-        
+
         sql.append("""
                 ORDER BY
                     id ASC,

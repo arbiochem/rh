@@ -6,21 +6,66 @@
     le contenu est regénéré.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" package="com.companyname.app_commercial" android:versionCode="1" android:versionName="1.0">
+  <!--
+	  ⚠️ VÉRIFIE CETTE LIGNE : "package" doit correspondre exactement à la
+	  valeur <ApplicationId> de ton fichier app_commercial.csproj.
+	  Ouvre le .csproj, cherche <ApplicationId>...</ApplicationId>, et si la
+	  valeur est différente de "com.companyname.app_commercial", remplace-la
+	  ci-dessus par la valeur exacte du .csproj.
+    -->
   <!-- suppress UsesMinSdkAttributes -->
   <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="29" />
-  <uses-permission android:name="android.permission.INTERNET" />
-  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+  <!-- Permissions -->
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+  <!--
+       Nécessaire pour que le suivi continue quand l'app n'est pas ouverte.
+	     Android affichera obligatoirement une demande séparée "Toujours autoriser"
+	     à l'utilisateur (pas possible de l'obtenir silencieusement).
+    -->
+  <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.WAKE_LOCK" />
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+  <!--
+       Android 13+ exige la permission explicite pour afficher la notification
+	     obligatoire du foreground service.
+    -->
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
   <permission android:name="com.companyname.app_commercial.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" android:protectionLevel="signature" />
   <uses-permission android:name="com.companyname.app_commercial.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
   <application android:name="crc64702ceabdc7f5efcc.MainApplication" android:allowBackup="true" android:appComponentFactory="androidx.core.app.CoreComponentFactory" android:debuggable="true" android:extractNativeLibs="true" android:icon="@mipmap/appicon" android:label="app_commercial" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true">
+    <!--
+		  ⚠️ VÉRIFIE CES ATTRIBUTS : android:icon / android:roundIcon doivent
+		  correspondre aux noms de ressources réellement présents dans ton
+		  dossier Platforms/Android/Resources/mipmap-*/. Le template MAUI par
+		  défaut utilise "appicon" et "appicon_round" — si ton projet avait un
+		  nom différent avant l'écrasement, ajuste ici.
+        -->
+    <!--
+         Déclaration manuelle du service (voir commentaire dans
+		     BackgroundLocationService.cs pour la raison de ce choix)
+        -->
+    <service android:name="app_commercial.Platforms.Android.BackgroundLocationService" android:exported="false" android:foregroundServiceType="location" />
+    <!--
+         Le BroadcastReceiver (BootReceiver.cs) est déclaré automatiquement
+		     via l'attribut [BroadcastReceiver] du code C# — rien à ajouter ici
+		     pour lui, MAUI génère l'entrée <receiver> au build.
+        -->
     <activity android:name="crc64702ceabdc7f5efcc.MainActivity" android:configChanges="density|orientation|smallestScreenSize|screenLayout|screenSize|uiMode" android:exported="true" android:launchMode="singleTop" android:theme="@style/Maui.SplashTheme">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+    <receiver android:name="crc64be584ffc611ec50e.BootReceiver" android:enabled="true" android:exported="true">
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED" />
+      </intent-filter>
+    </receiver>
     <activity android:name="crc6468b6408a11370c2f.WebAuthenticatorIntermediateActivity" android:configChanges="orientation|screenSize" android:exported="false" />
     <provider android:name="microsoft.maui.essentials.fileProvider" android:authorities="com.companyname.app_commercial.fileProvider" android:exported="false" android:grantUriPermissions="true">
       <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/microsoft_maui_essentials_fileprovider_file_paths" />

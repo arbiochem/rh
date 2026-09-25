@@ -64,6 +64,13 @@
             <version>1.0.4</version>
         </dependency>
 
+        <!-- Driver JDBC SQL Server (version gérée par Spring Boot) -->
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
         <!-- Excel -->
         <dependency>
             <groupId>org.apache.poi</groupId>

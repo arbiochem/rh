@@ -1,0 +1,38 @@
+﻿<!--
+  À AJOUTER dans Platforms/Android/AndroidManifest.xml existant du projet
+  (ne pas remplacer le fichier, fusionner ces lignes dedans).
+-->
+
+<!-- Dans la balise <manifest>, avant <application> : -->
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<!-- Nécessaire pour que le suivi continue quand l'app n'est pas ouverte.
+     Android affichera obligatoirement une demande séparée "Toujours autoriser"
+     à l'utilisateur (pas possible de l'obtenir silencieusement). -->
+<uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.WAKE_LOCK" />
+<!-- Android 13+ exige la permission explicite pour afficher la notification
+     obligatoire du foreground service. -->
+<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+<!--
+  Dans la balise <application> :
+
+  Le BroadcastReceiver (BootReceiver.cs) est déclaré automatiquement via
+  l'attribut [BroadcastReceiver] du code C# — rien à ajouter pour lui.
+
+  En revanche, le <service> doit être déclaré ICI manuellement avec
+  android:foregroundServiceType="location", car cet attribut XML ne peut
+  pas être généré de façon fiable depuis l'attribut C# [Service(...)] sur
+  tous les niveaux de SDK installés (voir commentaire dans
+  BackgroundLocationService.cs). Ajoute ce bloc À L'INTÉRIEUR de
+  <application> ... </application> :
+-->
+<service
+    android:name="app_commercial.Platforms.Android.BackgroundLocationService"
+    android:exported="false"
+    android:foregroundServiceType="location" />

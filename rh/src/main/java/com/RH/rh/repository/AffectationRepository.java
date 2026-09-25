@@ -54,7 +54,7 @@ public class AffectationRepository {
                     a.date_affectation,
                     ag.id AS agent_id,
                     ag.matricule,
-                    ag.nom || ' ' || ag.prenom AS agent,
+                    CONCAT(ag.nom, ' ', ag.prenom) AS agent,
                     a.sites
                 FROM affectations a
                 INNER JOIN agents ag
@@ -85,7 +85,7 @@ public class AffectationRepository {
                     a.date_affectation,
                     ag.id AS agent_id,
                     ag.matricule,
-                    ag.nom || ' ' || ag.prenom AS agent,
+                    CONCAT(ag.nom, ' ', ag.prenom) AS agent,
                     a.sites
                 FROM affectations a
                 INNER JOIN agents ag
@@ -134,7 +134,7 @@ public class AffectationRepository {
                     a.date_affectation,
                     ag.id AS agent_id,
                     ag.matricule,
-                    ag.nom || ' ' || ag.prenom AS agent,
+                    CONCAT(ag.nom, ' ', ag.prenom) AS agent,
                     a.sites
                 FROM affectations a
                 INNER JOIN agents ag
@@ -274,7 +274,7 @@ public class AffectationRepository {
                     a.date_affectation,
                     ag.id AS agent_id,
                     ag.matricule,
-                    ag.nom || ' ' || ag.prenom AS agent,
+                    CONCAT(ag.nom, ' ', ag.prenom) AS agent,
                     a.sites
                 FROM affectations a
                 INNER JOIN agents ag
@@ -307,7 +307,7 @@ public class AffectationRepository {
                     a.date_affectation,
                     ag.id AS agent_id,
                     ag.matricule,
-                    ag.nom || ' ' || ag.prenom AS agent,
+                    CONCAT(ag.nom, ' ', ag.prenom) AS agent,
                     a.sites
                 FROM affectations a
                 INNER JOIN agents ag

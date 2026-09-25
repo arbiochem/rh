@@ -467,3 +467,6 @@ D:\Arbiochem\Travail\Projets\rh\frontend\app_commercial\app_commercial\obj\Relea
 D:\Arbiochem\Travail\Projets\rh\frontend\app_commercial\app_commercial\obj\Release\net9.0-android\android\marshal_methods.armeabi-v7a.o
 D:\Arbiochem\Travail\Projets\rh\frontend\app_commercial\app_commercial\obj\Release\net9.0-android\android\jni_remap.armeabi-v7a.o
 D:\Arbiochem\Travail\Projets\rh\frontend\app_commercial\app_commercial\obj\Release\net9.0-android\app_shared_libraries\armeabi-v7a\libxamarin-app.so
+D:\Arbiochem\Travail\Projets\rh\frontend\app_commercial\app_commercial\obj\Release\net9.0-android\android\src\crc64be584ffc611ec50e\BackgroundLocationService.java
+D:\Arbiochem\Travail\Projets\rh\frontend\app_commercial\app_commercial\obj\Release\net9.0-android\android\src\crc64be584ffc611ec50e\BootReceiver.java
+D:\Arbiochem\Travail\Projets\rh\frontend\app_commercial\app_commercial\obj\Release\net9.0-android\android\src\app_commercial\Platforms\Android\BackgroundLocationService.java

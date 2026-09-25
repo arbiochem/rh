@@ -62,7 +62,7 @@
             color: var(--text-soft, #55493D);
             margin-bottom: 0.4rem;
         }
-    
+
         label .hint {
             display: block;
             font-weight: 400;
@@ -70,7 +70,7 @@
             font-size: 0.8rem;
             margin-top: 0.35rem;
         }
-    
+
         label .hint textarea {
             display: block;
             width: 100%;
@@ -87,16 +87,15 @@
             min-height: 4.5rem;
             transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
-    
+
         label .hint textarea:hover {
             border-color: #D8CDB4;
         }
-    
+
         label .hint textarea:focus {
             border-color: var(--green, #4C7A57);
             box-shadow: 0 0 0 3px rgba(76, 122, 87, 0.14);
         }
-    
 
         body {
             margin: 0;
@@ -153,6 +152,22 @@
             color: var(--muted);
             font-size: 0.92rem;
             margin-top: 0.35rem;
+        }
+
+        /* ---------- Alert ---------- */
+
+        .alert {
+            padding: 0.9rem 1.2rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid transparent;
+        }
+
+        .alert-danger {
+            background: var(--danger-bg);
+            color: var(--danger);
+            border-color: #E8C9BC;
         }
 
         /* ---------- Panels ---------- */
@@ -232,35 +247,6 @@
             gap: 1.25rem;
         }
 
-        .field label {
-            display: block;
-            font-size: 0.84rem;
-            font-weight: 600;
-            color: var(--text-soft);
-            margin-bottom: 0.4rem;
-        }
-
-        .field .hint {
-            font-weight: 400;
-            color: var(--muted);
-            font-size: 0.8rem;
-        }
-
-        .field input,
-        .field select,
-        .field textarea {
-            width: 100%;
-            padding: 0.62rem 0.8rem;
-            font-family: inherit;
-            font-size: 0.92rem;
-            color: var(--text);
-            background: var(--surface);
-            border: 1px solid var(--line);
-            border-radius: var(--radius-sm);
-            outline: none;
-            transition: border-color 0.15s ease, box-shadow 0.15s ease;
-        }
-
         .field select {
             appearance: none;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A7F6E' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
@@ -285,55 +271,6 @@
         .field textarea {
             resize: vertical;
             min-height: 4.5rem;
-        }
-
-        .sites-section {
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--line-soft);
-        }
-
-        .sites-section > label {
-            display: block;
-            font-size: 0.84rem;
-            font-weight: 600;
-            color: var(--text-soft);
-        }
-
-        .site-checks {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.6rem;
-            margin-top: 0.7rem;
-        }
-
-        .site-check {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.48rem 0.9rem;
-            border: 1px solid var(--line);
-            border-radius: 999px;
-            font-size: 0.87rem;
-            color: var(--text-soft);
-            cursor: pointer;
-            transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
-        }
-
-        .site-check:hover {
-            border-color: #D8CDB4;
-        }
-
-        .site-check:has(input:checked) {
-            border-color: var(--green);
-            background: var(--green-tint);
-            color: var(--green-soft);
-        }
-
-        .site-check input {
-            accent-color: var(--green);
-            width: 15px;
-            height: 15px;
         }
 
         .form-actions {
@@ -384,6 +321,17 @@
             color: var(--green-soft);
         }
 
+        .btn-success {
+            background: transparent;
+            border-color: var(--line);
+            color: var(--green-soft);
+        }
+
+        .btn-success:hover {
+            border-color: var(--green);
+            background: var(--green-tint);
+        }
+
         .btn-danger {
             background: transparent;
             border-color: transparent;
@@ -395,36 +343,6 @@
         .btn-danger:hover {
             background: var(--danger-bg);
             border-color: var(--danger-bg);
-        }
-
-        /* ---------- Filtre date ---------- */
-
-        .date-filter {
-            display: flex;
-            align-items: center;
-            gap: 0.9rem;
-            flex-wrap: wrap;
-        }
-
-        .date-filter label {
-            font-size: 0.88rem;
-            font-weight: 600;
-            color: var(--text-soft);
-            margin: 0;
-        }
-
-        .date-filter input {
-            padding: 0.55rem 0.8rem;
-            font-family: inherit;
-            font-size: 0.92rem;
-            border: 1px solid var(--line);
-            border-radius: var(--radius-sm);
-            transition: border-color 0.15s ease, box-shadow 0.15s ease;
-        }
-
-        .date-filter input:focus {
-            border-color: var(--green);
-            box-shadow: 0 0 0 3px var(--focus-ring);
         }
 
         /* ---------- Table pointage ---------- */
@@ -491,20 +409,6 @@
             font-size: 0.92rem;
         }
 
-        /* ---------- Export ---------- */
-
-        .export-row {
-            display: flex;
-            gap: 1.2rem;
-            flex-wrap: wrap;
-            align-items: flex-end;
-        }
-
-        .export-row .field {
-            flex: 1;
-            min-width: 170px;
-        }
-
         /* ---------- Responsive ---------- */
 
         @media (max-width: 640px) {
@@ -528,11 +432,6 @@
             table.roster thead th,
             table.roster tbody td {
                 padding: 0.7rem 1.1rem;
-            }
-
-            .export-row {
-                flex-direction: column;
-                align-items: stretch;
             }
 
         }
@@ -565,6 +464,11 @@
     </div>
 
 
+    <!-- MESSAGE D'ERREUR (ex : matricule en doublon) -->
+
+    <div th:if="${erreur}" class="alert alert-danger" th:text="${erreur}"></div>
+
+
     <!-- ================================================= -->
     <!-- FORMULAIRE -->
     <!-- ================================================= -->
@@ -587,238 +491,236 @@
                     th:name="${_csrf.parameterName}"
                     th:value="${_csrf.token}"/>
 
-                <div class="field">
-                    <div class="col-md-6 col-lg-4">
+                <div class="fields-grid">
 
-                        <label class="form-label">
+                    <div class="field">
+
+                        <label>
                             Matricule
                         </label>
 
                         <input
                                 type="text"
-                                class="form-control"
                                 th:field="*{matricule}"
                                 required>
 
                     </div>
 
 
-                    <div class="col-md-6 col-lg-4">
+                    <div class="field">
 
-                        <label class="form-label">
+                        <label>
                             Nom
                         </label>
 
                         <input
                                 type="text"
-                                class="form-control"
                                 th:field="*{nom}"
                                 required>
 
                     </div>
 
 
-                    <div class="col-md-6 col-lg-4">
+                    <div class="field">
 
-                        <label class="form-label">
+                        <label>
                             Prénom
                         </label>
 
                         <input
                                 type="text"
-                                class="form-control"
                                 th:field="*{prenom}"
                                 required>
 
                     </div>
 
 
-                    <div class="col-md-6 col-lg-4">
+                    <div class="field">
 
-                        <label class="form-label">
+                        <label>
                             Téléphone
                         </label>
 
                         <input
                             type="text"
-                            class="form-control"
                             th:field="*{telephone}">
 
                     </div>
 
 
-                    <div class="col-md-6 col-lg-4">
+                    <div class="field">
 
-                        <label class="form-label">
+                        <label>
                             Email
                         </label>
 
                         <input
                                 type="email"
-                                class="form-control"
                                 th:field="*{email}">
 
                     </div>
                 </div>
 
-                <div class="mt-4" style="padding-top: 1.5rem;">
+                <div class="form-actions">
 
-                    <button type="submit" class="btn btn-primary px-4">
+                    <button type="submit" class="btn btn-primary">
                         <i class="bi bi-check-lg me-1"></i>
                         Enregistrer
                     </button>
 
                 </div>
-                
+
             </form>
-            <br>
-            <!-- ================================================= -->
-            <!-- LISTE DES AGENTS -->
-            <!-- ================================================= -->
 
-            <div class="panel">
-
-                <div class="panel-head">
-                    <h2>Liste des agents</h2>
-                    <span class="count-badge"
-                        th:text="${(agents != null ? agents.size() : 0)} + ' résultat(s)'">
-                    </span>
-                </div>
-
-                <div class="panel-body">
-
-                    <form method="get"
-                        action="/agents"
-                        style="margin-bottom: 1.5rem;">
-
-                        <div class="fields-grid">
-
-                            <!-- RECHERCHE TEXTE -->
-                            <div class="field">
-
-                                <label>
-                                    Critère de recherche
-                                </label>
-
-                                <input
-                                        type="text"
-                                        name="q"
-                                        th:value="${q}"
-                                        placeholder="Nom ou Prénom, matricule, telephone">
-
-                            </div>
-                        </div>
-
-
-                        <div class="form-actions"
-                            style="
-                                margin-top: 1rem;
-                                padding-top: 0;
-                                border-top: none;
-                                display: flex;
-                                gap: 10px;
-                            ">
-
-                            <button
-                                    type="submit"
-                                    class="btn btn-primary">
-
-                                Rechercher
-
-                            </button>
-
-
-                            <a
-                                    href="/agents"
-                                    class="btn btn-outline">
-
-                                Réinitialiser
-
-                            </a>
-
-                        </div>
-
-                    </form>
-
-                    <div class="table-responsive" th:if="${agents != null and !agents.isEmpty()}">
-                        <table class="roster">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        Matricule
-                                    </th>
-
-                                    <th>
-                                        Nom
-                                    </th>
-
-                                    <th>
-                                        Téléphone
-                                    </th>
-
-                                    <th>
-                                        Email
-                                    </th>
-
-                                    <th class="text-end">
-                                        Actions
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="agent : ${agents}">
-                                    <td class="matricule" th:text="${agent.matricule}"></td>
-                                    <td th:text="${agent.nom + ' ' + agent.prenom}"></td>
-                                    <td th:text="${agent.telephone}"></td>
-                                    <td th:text="${agent.email}"></td>
-                                    <td class="text-end">
-                                        <div style="display: inline-flex; align-items: center; gap: 4px;">
-
-                                            <!-- Modifier -->
-                                            <a
-                                                th:href="@{'/agents/edit/' + ${agent.id}}"
-                                                class="btn btn-success"
-                                                title="Modifier"
-                                                style="padding: 0.35rem 0.5rem;">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-
-                                            <!-- Supprimer -->
-                                            <form
-                                                method="post"
-                                                th:action="@{'/agents/delete/' + ${agent.id}}"
-                                                style="display: inline; margin: 0;"
-                                                onsubmit="return confirm('Voulez-vous vraiment supprimer cet agent?');">
-
-                                                <input
-                                                    type="hidden"
-                                                    th:name="${_csrf.parameterName}"
-                                                    th:value="${_csrf.token}"/>
-
-                                                <button
-                                                    type="submit"
-                                                    class="btn btn-danger"
-                                                    title="Supprimer"
-                                                    style="padding: 0.35rem 0.5rem;">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-
-                                            </form>
-
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="empty-state" th:if="${agents == null or agents.isEmpty()}">
-                        Aucun agent trouvé.
-                    </div>
-
-                </div>
-            </div>
         </div>
     </div>
+
+    <!-- ================================================= -->
+    <!-- LISTE DES AGENTS -->
+    <!-- ================================================= -->
+
+    <div class="panel">
+
+        <div class="panel-head">
+            <h2>Liste des agents</h2>
+            <span class="count-badge"
+                th:text="${(agents != null ? agents.size() : 0)} + ' résultat(s)'">
+            </span>
+        </div>
+
+        <div class="panel-body">
+
+            <form method="get"
+                action="/agents"
+                style="margin-bottom: 1.5rem;">
+
+                <div class="fields-grid">
+
+                    <!-- RECHERCHE TEXTE -->
+                    <div class="field">
+
+                        <label>
+                            Critère de recherche
+                        </label>
+
+                        <input
+                                type="text"
+                                name="q"
+                                th:value="${q}"
+                                placeholder="Nom ou Prénom, matricule, telephone">
+
+                    </div>
+                </div>
+
+
+                <div class="form-actions"
+                    style="
+                        margin-top: 1rem;
+                        padding-top: 0;
+                        border-top: none;
+                        display: flex;
+                        gap: 10px;
+                    ">
+
+                    <button
+                            type="submit"
+                            class="btn btn-primary">
+
+                        Rechercher
+
+                    </button>
+
+                    <a
+                            href="/agents"
+                            class="btn btn-outline">
+
+                        Réinitialiser
+
+                    </a>
+
+                </div>
+
+            </form>
+
+            <div class="table-responsive" th:if="${agents != null and !agents.isEmpty()}">
+                <table class="roster">
+                    <thead>
+                        <tr>
+                            <th>
+                                Matricule
+                            </th>
+
+                            <th>
+                                Nom
+                            </th>
+
+                            <th>
+                                Téléphone
+                            </th>
+
+                            <th>
+                                Email
+                            </th>
+
+                            <th class="text-end">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="agent : ${agents}">
+                            <td class="matricule" th:text="${agent.matricule}"></td>
+                            <td th:text="${agent.nom + ' ' + agent.prenom}"></td>
+                            <td th:text="${agent.telephone}"></td>
+                            <td th:text="${agent.email}"></td>
+                            <td class="text-end">
+                                <div style="display: inline-flex; align-items: center; gap: 4px;">
+
+                                    <!-- Modifier -->
+                                    <a
+                                        th:href="@{'/agents/edit/' + ${agent.id}}"
+                                        class="btn btn-success"
+                                        title="Modifier"
+                                        style="padding: 0.35rem 0.5rem;">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+
+                                    <!-- Supprimer -->
+                                    <form
+                                        method="post"
+                                        th:action="@{'/agents/delete/' + ${agent.id}}"
+                                        style="display: inline; margin: 0;"
+                                        onsubmit="return confirm('Voulez-vous vraiment supprimer cet agent?');">
+
+                                        <input
+                                            type="hidden"
+                                            th:name="${_csrf.parameterName}"
+                                            th:value="${_csrf.token}"/>
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-danger"
+                                            title="Supprimer"
+                                            style="padding: 0.35rem 0.5rem;">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+
+                                    </form>
+
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="empty-state" th:if="${agents == null or agents.isEmpty()}">
+                Aucun agent trouvé.
+            </div>
+
+        </div>
+    </div>
+
+</div>
 </body>
 </html>

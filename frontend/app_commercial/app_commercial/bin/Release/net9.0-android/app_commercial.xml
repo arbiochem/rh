@@ -4,6 +4,65 @@
         <name>app_commercial</name>
     </assembly>
     <members>
+        <member name="T:app_commercial.Platforms.Android.BackgroundLocationService">
+             <summary>
+             Foreground Service Android.
+            
+             Responsabilités :
+             - suivi GPS en continu, même lorsque l'application est fermée ;
+             - traitement automatique des positions ;
+             - synchronisation automatique des pointages hors ligne ;
+             - synchronisation dès que Wi-Fi ou Data mobile revient.
+             </summary>
+        </member>
+        <member name="T:app_commercial.Platforms.Android.BootReceiver">
+            <summary>
+            Reçoit l'évènement BOOT_COMPLETED (déclenché par Android quand le
+            téléphone termine son démarrage) et relance automatiquement le service
+            de suivi GPS, sans que l'utilisateur ait besoin d'ouvrir l'app.
+            </summary>
+        </member>
+        <member name="M:app_commercial.PointageService.MaintenantFiable">
+            <summary>Heure locale fiable (serveur + temps écoulé), ou heure du téléphone à défaut.</summary>
+        </member>
+        <member name="M:app_commercial.PointageService.SynchroniserHorlogeSiNecessaireAsync">
+            <summary>En ligne : relit l'heure du serveur si la référence a plus de 10 minutes.</summary>
+        </member>
+        <member name="P:app_commercial.PointageService.DerniereHeurePointage">
+            <summary>
+            Heure réelle (heure du téléphone) du dernier pointage enregistré.
+            À afficher avec .ToString("HH:mm:ss") : c'est une heure, pas une durée.
+            </summary>
+        </member>
+        <member name="M:app_commercial.PointageService.EstLieuValide(System.String)">
+            <summary>
+            Un lieu est valide s'il n'est ni vide, ni "Lieu inconnu", ni "Lieu GPS (...)".
+            </summary>
+        </member>
+        <member name="M:app_commercial.PointageService.AjouterPositionEnAttente(System.Double,System.Double)">
+            <summary>
+            Hors ligne : ajoute la position À LA LISTE (avec l'heure réelle), sans écraser
+            les précédentes. Ignorée si on n'a pas bougé de plus de 80 m depuis la dernière.
+            </summary>
+        </member>
+        <member name="M:app_commercial.PointageService.TraiterPositionsEnAttenteInterneAsync">
+            <summary>
+            Au retour du réseau : résout chaque position en attente, dans l'ordre,
+            et enregistre Sortie/Entrée avec l'heure où la position a été captée.
+            À appeler sous _traitementLock.
+            </summary>
+        </member>
+        <member name="M:app_commercial.PointageService.TraiterNouvellePositionAsync(System.Double,System.Double)">
+            <summary>
+            Point d'entrée appelé à chaque nouvelle position GPS (UI ou service).
+            </summary>
+        </member>
+        <member name="M:app_commercial.PointageService.VerifierPointageDuJourAsync(System.Nullable{System.Double},System.Nullable{System.Double})">
+            <summary>
+            Si aucune Entrée n'a été enregistrée aujourd'hui (appareil immobile),
+            en enregistre une avec la dernière position connue.
+            </summary>
+        </member>
         <member name="T:app_commercial.Resource">
             <summary>
             Android Resource Designer class.
